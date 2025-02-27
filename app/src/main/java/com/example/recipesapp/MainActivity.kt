@@ -8,11 +8,15 @@ import androidx.core.view.WindowInsetsCompat
 import com.example.recipesapp.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
-    lateinit var binding: ActivityMainBinding
+    private var _binding: ActivityMainBinding? = null
+    private val binding
+        get() = _binding ?: throw IllegalStateException("binding must not be null")
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
-        binding = ActivityMainBinding.inflate(layoutInflater)
+        _binding = ActivityMainBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
-       val view = binding.root
+        val view = binding.root
         setContentView(view)
 
     }

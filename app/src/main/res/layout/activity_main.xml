@@ -5,12 +5,11 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
-    android:background="@color/main">
+    android:background="@color/main"
+    tools:context=".MainActivity">
 
 
     <LinearLayout
-        android:layout_marginBottom="55dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -18,33 +17,29 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <!-- как иначе сделать отступ между кнопками -->
         <Button
             style="@style/StyleNavButton"
-            android:backgroundTint="@color/category"
-            android:layout_marginEnd="@dimen/half_padding"
-            android:layout_marginStart="@dimen/main_padding"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/categories"
+            android:layout_marginStart="@dimen/main_padding"
+            android:layout_marginEnd="@dimen/half_padding"
             android:layout_weight="50"
-            />
+            android:backgroundTint="@color/category"
+            android:text="@string/categories" />
 
-<Button
-    style="@style/StyleNavButton"
-    android:backgroundTint="@color/chosen"
-    android:layout_marginEnd="@dimen/main_padding"
-    android:layout_width="0dp"
-    android:layout_height="wrap_content"
-    android:text="@string/chosen"
-    android:layout_weight="50"
-    app:icon="@drawable/ic_heart_empty"
-    app:iconGravity="textEnd"/>
-
+        <Button
+            style="@style/StyleNavButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/main_padding"
+            android:layout_weight="50"
+            android:backgroundTint="@color/chosen"
+            android:text="@string/chosen"
+            app:icon="@drawable/ic_heart_empty"
+            app:iconGravity="textEnd" />
 
 
     </LinearLayout>
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
