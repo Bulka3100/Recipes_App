@@ -9,16 +9,16 @@
     tools:context=".MainActivity">
 
     <androidx.fragment.app.FragmentContainerView
-        android:layout_width="wrap_content"
+        android:id="@+id/mainContainer"
+        android:layout_width="0dp"
         android:layout_height="0dp"
-        android:id = "@+id/mainContainer"
-        app:layout_constraintBottom_toTopOf="@+id/Buttons"
+        app:layout_constraintBottom_toTopOf="@+id/btnContainer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
-        android:id="@+id/Buttons"
+        android:id="@+id/btnContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/main_padding"
