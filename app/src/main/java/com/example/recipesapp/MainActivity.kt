@@ -18,11 +18,34 @@ class MainActivity : AppCompatActivity() {
         _binding = ActivityMainBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
+
+
+
+
         if (savedInstanceState == null) {
             supportFragmentManager.commit {
+                setReorderingAllowed(true)
                 add(R.id.mainContainer, CategoriesListFragment())
             }
+        }
 
+        binding.btnFavorites.setOnClickListener {
+
+            supportFragmentManager.commit {
+                setReorderingAllowed(true)
+                replace(R.id.mainContainer, FavoritesFragment())
+            }
+        }
+
+            binding.btnCategories.setOnClickListener {
+
+                supportFragmentManager.commit {
+                    setReorderingAllowed(true)
+                    replace(R.id.mainContainer, CategoriesListFragment ())
+                }
+            }
         }
     }
-}
+
+
+
