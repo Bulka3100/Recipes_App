@@ -3,5 +3,7 @@ package com.example.recipesapp.Data_Classes
 class Recipe(
     val id: Int,
     val title: String,
-    val ingredient: Ingredient,
+    val ingredient: List<Ingredient>,
+    val method: List<String>,
+    val imageUrl: String,
 )
