@@ -43,7 +43,6 @@ object STUB {
         )
     )
 
-    //    нормально так вписывать объекты в список? Они же никак не отличаются по имени
     fun getCategories(): List<Category> {
         return categories
     }
