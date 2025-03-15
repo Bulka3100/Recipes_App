@@ -38,14 +38,14 @@
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
+<!--20dp по макету -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvCategorie"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginHorizontal="@dimen/half_padding"
         android:layout_marginTop="@dimen/main_padding"
-        android:layout_marginBottom="@dimen/half_padding"
+        android:layout_marginBottom="20dp"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:spanCount="2"
         tools:itemCount="6"
