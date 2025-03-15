@@ -38,7 +38,7 @@
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-<!--20dp по макету -->
+<!--20dp по макету . Почему такие отступы странные? не центрируются никак элементы и чуть прижаты слева ломаются все отступы (я понимаю что задал значения высоте и ширине карточки)-->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvCategorie"
         android:layout_width="match_parent"
@@ -49,6 +49,7 @@
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:spanCount="2"
         tools:itemCount="6"
-        tools:listitem="@layout/item_category" />
+        tools:listitem="@layout/item_category"
+       />
 
 </LinearLayout>
