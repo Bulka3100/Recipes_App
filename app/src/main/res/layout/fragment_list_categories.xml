@@ -8,12 +8,12 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="149dp">
+        android:layout_height="@dimen/category_height">
 
         <ImageView
-            android:id="@+id/header_image"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:id="@+id/ivCategories"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:scaleType="centerCrop"
             android:src="@drawable/img"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -22,34 +22,32 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:layout_width="149dp"
-            android:layout_height="44dp"
+            style="@style/StyleTitle20"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/main_padding"
             android:layout_marginBottom="@dimen/main_padding"
             android:background="@drawable/shape_drawable"
             android:fontFamily="@font/montserrat_alternates_semibold"
             android:gravity="center"
+            android:padding="10dp"
             android:text="@string/categories"
-            android:textAllCaps="true"
-            android:textColor="#5F3678"
-            android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-<!--20dp по макету . Почему такие отступы странные? не центрируются никак элементы и чуть прижаты слева ломаются все отступы (я понимаю что задал значения высоте и ширине карточки)-->
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvCategorie"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginHorizontal="@dimen/half_padding"
         android:layout_marginTop="@dimen/main_padding"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="@dimen/category_bottom"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:spanCount="2"
         tools:itemCount="6"
-        tools:listitem="@layout/item_category"
-       />
+        tools:listitem="@layout/item_category" />
 
 </LinearLayout>

@@ -2,48 +2,48 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="156dp"
-    android:layout_height="220dp"
-    android:clickable="true"
-    android:focusable="true"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="@dimen/half_padding"
     android:layout_marginBottom="@dimen/main_padding"
-    android:foreground="?android:attr/selectableItemBackground"
-android:layout_marginHorizontal="@dimen/half_padding"
-    >
+    style="@style/CardViewRippleStyle">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-<!--        <ImageView
+        <ImageView
             android:id="@+id/imageView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/category_cart_height"
             android:scaleType="centerCrop"
-            tools:layout_editor_absoluteX="0dp"
-            tools:layout_editor_absoluteY="-100dp" />
--->
+            android:src="@drawable/img" />
+
+        <TextView
+            android:id="@+id/tvNameCt"
+            style="@style/StyleTitle14Category"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/half_padding"
+            android:text="@string/categories"
+            android:textSize="@dimen/card_text_size_title"
+            app:layout_constraintBottom_toTopOf="@+id/tvDescription"
+            app:layout_constraintStart_toStartOf="parent" />
+
         <TextView
             android:id="@+id/tvDescription"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/half_padding"
-            android:layout_marginBottom="@dimen/half_padding"
+            android:layout_margin="@dimen/half_padding"
             android:text="text"
-            android:textSize="12sp"
+            android:textSize="@dimen/card_text_size"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <TextView
-            android:id="@+id/tvNameCt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/half_padding"
-            android:layout_marginBottom="@dimen/half_padding"
-            android:text="@string/categories"
-            android:textSize="14sp"
-            app:layout_constraintBottom_toTopOf="@+id/tvDescription"
-            app:layout_constraintStart_toStartOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </LinearLayout>
+
 
 </androidx.cardview.widget.CardView>
