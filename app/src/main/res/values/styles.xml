@@ -12,5 +12,24 @@
         <item name="android:textAppearance">@style/StyleTitle14</item>
         <item name="cornerRadius">@dimen/half_padding</item>
     </style>
+    <style name="StyleTitle20">
+        <item name="android:textSize">20sp</item>
+        <item name="android:fontFamily">@font/montserrat_alternates_semibold</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textColor">@color/categoryMain</item>
+
+    </style>
+    <style name="StyleTitle14Category">
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">@font/montserrat_alternates_semibold</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textColor">@color/categoryMain</item>
+
+    </style>
+    <style name="CardViewRippleStyle">
+        <item name="android:foreground">?android:attr/selectableItemBackground</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+    </style>
 
 </resources>
