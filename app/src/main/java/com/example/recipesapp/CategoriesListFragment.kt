@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.commit
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.recipesapp.databinding.FragmentListCategoriesBinding
@@ -45,11 +46,11 @@ class CategoriesListFragment : Fragment() {
 
     private fun openRecipesByCategoryId() {
 
-        parentFragmentManager // Плчему лушче спользуовать parentFragmentManager вместо supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.mainContainer, RecipesListFragment())
-            .addToBackStack(null) //нужно ли?
-            .commit()
+        parentFragmentManager.commit {
+            replace(R.id.mainContainer, RecipesListFragment())
+            addToBackStack(null)
+        } // Плчему лушче спользуовать parentFragmentManager вместо supportFragmentManager
+
     }
 //    или может лучше использовать findNavController().navigate(R.id.action_categoriesListFragment_to_recipesListFragment) ? Не до конца понял суть, но могу разобраться если это лучший вариант
 
