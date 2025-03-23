@@ -49,7 +49,8 @@ class CategoriesListFragment : Fragment() {
         parentFragmentManager.commit {
             replace(R.id.mainContainer, RecipesListFragment())
             addToBackStack(null)
-        } // Плчему лушче спользуовать parentFragmentManager вместо supportFragmentManager
+            setReorderingAllowed(true)
+        }
 
     }
 //    или может лучше использовать findNavController().navigate(R.id.action_categoriesListFragment_to_recipesListFragment) ? Не до конца понял суть, но могу разобраться если это лучший вариант
