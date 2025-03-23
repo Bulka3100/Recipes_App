@@ -5,6 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.commit
+import androidx.fragment.app.replace
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.recipesapp.databinding.FragmentListCategoriesBinding
 import com.example.recipesapp.databinding.FragmentRecipesBinding
 
@@ -30,6 +33,52 @@ class RecipesListFragment : Fragment() {
             categoryId = it.getInt(CategoriesListFragment.ARG_CATEGORY_ID)
             categoryName = it.getString(CategoriesListFragment.ARG_CATEGORY_NAME)
             categoryImageUrl = it.getString(CategoriesListFragment.ARG_CATEGORY_IMAGE_URL)
+            binding.tvRecipeNaming.text = categoryName
+            val inputStream =
+                requireContext().assets.open(
+                    categoryImageUrl ?: throw IllegalStateException("null")
+                )
+            binding.ivRecipeCategory.setImageDrawable(
+                android.graphics.drawable.Drawable.createFromStream(
+                    inputStream,
+                    null
+                )
+            )
+            initRecycler()
         }
+    }
+
+    private fun initRecycler() {
+        val recipes = STUB.getRecipesByCategoryId(0)
+        val adapter = RecipesListAdapter(recipes)
+
+        adapter.setOnItemClickListener(
+            object : RecipesListAdapter.OnItemClickListener {
+                override fun onItemClick(recipeId: Int) {
+                    openRecipeByRecipeId(recipeId)
+                }
+
+            }
+        )
+        binding.rvRecipes.apply {
+            this.adapter = adapter
+            layoutManager = LinearLayoutManager(context)
+
+
+        }
+    }
+
+    private fun openRecipeByRecipeId(recipeId: Int) {
+        parentFragmentManager.commit {
+            replace(R.id.mainContainer, RecipeFragment())
+            addToBackStack(null)
+            setReorderingAllowed(true)
+        }
+
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

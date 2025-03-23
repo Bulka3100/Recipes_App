@@ -49,6 +49,7 @@ class CategoriesListFragment : Fragment() {
         val categoryName: String = category?.title ?: "Unknown"
         val categoryImageUrl: String = category?.imageUrl ?: "Unknown"
 
+        //передал чтобы узнать что ставить в следующий фрагмент
         val bundle: Bundle = Bundle().apply {
             putInt(ARG_CATEGORY_ID, categoryId)
             putString(ARG_CATEGORY_NAME, categoryName)
