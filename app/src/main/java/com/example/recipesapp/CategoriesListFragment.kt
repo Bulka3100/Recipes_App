@@ -33,7 +33,7 @@ class CategoriesListFragment : Fragment() {
         val adapter = CategoriesListAdapter(dataSet)
         adapter.setOnItemClickListener(object : CategoriesListAdapter.OnItemClickListener {
             override fun onItemClick() {
-
+                openRecipesByCategoryId()
             }
         })
 
