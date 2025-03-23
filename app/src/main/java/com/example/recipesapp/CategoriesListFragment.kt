@@ -33,21 +33,32 @@ class CategoriesListFragment : Fragment() {
 
         val adapter = CategoriesListAdapter(dataSet)
         adapter.setOnItemClickListener(object : CategoriesListAdapter.OnItemClickListener {
-            override fun onItemClick() {
-                openRecipesByCategoryId()
+            override fun onItemClick(categoryId: Int) {
+                openRecipesByCategoryId(categoryId)
             }
         })
-
+            //почему требуется this
         binding.rvCategorie.apply {
             this.adapter = adapter
             layoutManager = GridLayoutManager(context, 2)
         }
     }
 
-    private fun openRecipesByCategoryId() {
+    private fun openRecipesByCategoryId(categoryId: Int) {
+        val category = STUB.getCategories().find { it.id == categoryId }
+        val categoryName: String = category?.title ?: "Unknown"
+        val categoryImageUrl: String = category?.imageUrl ?: "Unknown"
 
+        val bundle: Bundle = Bundle().apply {
+            putInt(ARG_CATEGORY_ID, categoryId)
+            putString(ARG_CATEGORY_NAME, categoryName)
+            putString(ARG_CATEGORY_IMAGE_URL, categoryImageUrl)
+        }
+        val fragment = RecipesListFragment().apply {
+            arguments = bundle
+        }
         parentFragmentManager.commit {
-            replace(R.id.mainContainer, RecipesListFragment())
+            replace(R.id.mainContainer, fragment)
             addToBackStack(null)
             setReorderingAllowed(true)
         }
@@ -60,5 +71,11 @@ class CategoriesListFragment : Fragment() {
         _binding = null
     }
 
+    //правильно понял что надо было так сделать?
+    companion object {
+        const val ARG_CATEGORY_ID = "category_id"
+        const val ARG_CATEGORY_NAME = "category_name"
+        const val ARG_CATEGORY_IMAGE_URL = "category_image"
+    }
 
 }
