@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.recyclerview.widget.GridLayoutManager
@@ -31,23 +32,35 @@ class CategoriesListFragment : Fragment() {
     private fun initRecycler() {
         val dataSet = STUB.getCategories()
 
-        val adapter = CategoriesListAdapter(dataSet)
-        adapter.setOnItemClickListener(object : CategoriesListAdapter.OnItemClickListener {
-            override fun onItemClick() {
-                openRecipesByCategoryId()
+        val categoriesAdapter = CategoriesListAdapter(dataSet)
+        categoriesAdapter.setOnItemClickListener(object :
+            CategoriesListAdapter.OnItemClickListener {
+            override fun onItemClick(categoryId: Int) {
+                openRecipesByCategoryId(categoryId)
             }
         })
-
+        //почему требуется this
         binding.rvCategorie.apply {
-            this.adapter = adapter
+            this.adapter = categoriesAdapter
             layoutManager = GridLayoutManager(context, 2)
         }
     }
 
-    private fun openRecipesByCategoryId() {
+    private fun openRecipesByCategoryId(categoryId: Int) {
+        val category = STUB.getCategories().find { it.id == categoryId }
+        val categoryName: String = category?.title ?: "Unknown"
+        val categoryImageUrl: String = category?.imageUrl ?: "Unknown"
 
+        val bundle = bundleOf(
+            ARG_CATEGORY_ID to categoryId,
+            ARG_CATEGORY_NAME to categoryName,
+            ARG_CATEGORY_IMAGE_URL to categoryImageUrl
+        )
+        val fragment = RecipesListFragment().apply {
+            arguments = bundle
+        }
         parentFragmentManager.commit {
-            replace(R.id.mainContainer, RecipesListFragment())
+            replace(R.id.mainContainer, fragment)
             addToBackStack(null)
             setReorderingAllowed(true)
         }
@@ -60,5 +73,11 @@ class CategoriesListFragment : Fragment() {
         _binding = null
     }
 
+    //правильно понял что надо было так сделать?
+    companion object {
+        const val ARG_CATEGORY_ID = "category_id"
+        const val ARG_CATEGORY_NAME = "category_name"
+        const val ARG_CATEGORY_IMAGE_URL = "category_image"
+    }
 
 }
