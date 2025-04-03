@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.recyclerview.widget.GridLayoutManager
@@ -31,15 +32,16 @@ class CategoriesListFragment : Fragment() {
     private fun initRecycler() {
         val dataSet = STUB.getCategories()
 
-        val adapter = CategoriesListAdapter(dataSet)
-        adapter.setOnItemClickListener(object : CategoriesListAdapter.OnItemClickListener {
+        val categoriesAdapter = CategoriesListAdapter(dataSet)
+        categoriesAdapter.setOnItemClickListener(object :
+            CategoriesListAdapter.OnItemClickListener {
             override fun onItemClick(categoryId: Int) {
                 openRecipesByCategoryId(categoryId)
             }
         })
-            //почему требуется this
+        //почему требуется this
         binding.rvCategorie.apply {
-            this.adapter = adapter
+            this.adapter = categoriesAdapter
             layoutManager = GridLayoutManager(context, 2)
         }
     }
@@ -49,11 +51,11 @@ class CategoriesListFragment : Fragment() {
         val categoryName: String = category?.title ?: "Unknown"
         val categoryImageUrl: String = category?.imageUrl ?: "Unknown"
 
-        val bundle: Bundle = Bundle().apply {
-            putInt(ARG_CATEGORY_ID, categoryId)
-            putString(ARG_CATEGORY_NAME, categoryName)
-            putString(ARG_CATEGORY_IMAGE_URL, categoryImageUrl)
-        }
+        val bundle = bundleOf(
+            ARG_CATEGORY_ID to categoryId,
+            ARG_CATEGORY_NAME to categoryName,
+            ARG_CATEGORY_IMAGE_URL to categoryImageUrl
+        )
         val fragment = RecipesListFragment().apply {
             arguments = bundle
         }
