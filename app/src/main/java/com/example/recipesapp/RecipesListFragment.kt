@@ -29,6 +29,12 @@ class RecipesListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initUi()
+        initRecycler()
+
+    }
+
+    private fun initUi() {
         arguments?.let {
             categoryId = it.getInt(CategoriesListFragment.ARG_CATEGORY_ID)
             categoryName = it.getString(CategoriesListFragment.ARG_CATEGORY_NAME)
@@ -44,12 +50,12 @@ class RecipesListFragment : Fragment() {
                     null
                 )
             )
-            initRecycler()
         }
     }
 
     private fun initRecycler() {
-        val recipes = STUB.getRecipesByCategoryId(0)
+        val recipes =
+            STUB.getRecipesByCategoryId(categoryId ?: throw IllegalStateException("no id"))
         val adapter = RecipesListAdapter(recipes)
 
         adapter.setOnItemClickListener(
@@ -62,7 +68,6 @@ class RecipesListFragment : Fragment() {
         )
         binding.rvRecipes.apply {
             this.adapter = adapter
-            layoutManager = LinearLayoutManager(context)
 
 
         }
@@ -81,4 +86,5 @@ class RecipesListFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
 }
