@@ -81,7 +81,7 @@ class RecipesListFragment : Fragment() {
         )
         //можно иначе передавать в replace? не понимаю зачем::class
         parentFragmentManager.commit {
-            replace(R.id.mainContainer, RecipeFragment::class.java, bundle)
+            replace<RecipeFragment>(R.id.mainContainer, args = bundle)
             addToBackStack(null)
             setReorderingAllowed(true)
         }
@@ -94,6 +94,6 @@ class RecipesListFragment : Fragment() {
     }
 //    разве это не статическая ссылка и у нас может проихойти утечка памяти? Также зачем нам вообще тут констажнта если можно просто хадать ключ строкой?  Не понимаю
 companion object{
-    const val ARG_RECIPE = "recipe"
+    const val ARG_RECIPE = "arg_recipe"
 }
 }

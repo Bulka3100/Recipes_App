@@ -14,6 +14,7 @@ import com.example.recipesapp.databinding.RecipeFragmentBinding
 class RecipeFragment : Fragment() {
     private var _binding: RecipeFragmentBinding? = null
     private val binding get() = _binding ?: throw IllegalStateException("пустой фрагмент")
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -22,26 +23,27 @@ class RecipeFragment : Fragment() {
         _binding = RecipeFragmentBinding.inflate(inflater, container, false)
         return binding.root
     }
-// нужно ли было с let заморачиваться вообще?
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val recipe = arguments?.let {
-            if (Build.VERSION.SDK_INT >= 33) {
-                it.getParcelable(ARG_RECIPE, Recipe::class.java)
-            } else {
-                @Suppress("DEPRECATION")
-                it.getParcelable(ARG_RECIPE) as? Recipe
-            }
+        var recipe: Recipe? = null
+        // а зачем сразу null ставить а только потом разбираться? Можно сразу создать и проинициализировать?
+        recipe = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            arguments?.getParcelable(ARG_RECIPE, Recipe::class.java)
+        } else {
+            @Suppress("DEPRECATION")
+            arguments?.getParcelable(ARG_RECIPE) as? Recipe
         }
-        recipe?.let {
-            binding.tvId.text = it.title
 
-        } ?: run{
-            binding.tvId.text = "рецепт не найдет"
-        }
+       recipe?.let {
+            binding.tvId.text = recipe.title
+        } ?: run {binding.tvId.text = "рецепт не найдет"}
+
 
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null // Очищаем binding при уничтожении view
+    }
 }
-
-
