@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
@@ -74,8 +75,13 @@ class RecipesListFragment : Fragment() {
     }
 
     private fun openRecipeByRecipeId(recipeId: Int) {
+        val recipe = STUB.getRecipeById(recipeId)
+        val bundle = bundleOf(
+            ARG_RECIPE to recipe
+        )
+        //можно иначе передавать в replace? не понимаю зачем::class
         parentFragmentManager.commit {
-            replace(R.id.mainContainer, RecipeFragment())
+            replace<RecipeFragment>(R.id.mainContainer, args = bundle)
             addToBackStack(null)
             setReorderingAllowed(true)
         }
@@ -86,5 +92,8 @@ class RecipesListFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-
+//    разве это не статическая ссылка и у нас может проихойти утечка памяти? Также зачем нам вообще тут констажнта если можно просто хадать ключ строкой?  Не понимаю
+companion object{
+    const val ARG_RECIPE = "arg_recipe"
+}
 }

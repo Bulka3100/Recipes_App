@@ -226,8 +226,9 @@ object STUB {
             imageUrl = "burger-chili.png"
         )
     )
+
     fun getRecipesByCategoryId(categoryId: Int): List<Recipe> {
-        if (categoryId == 0){
+        if (categoryId == 0) {
             return burgerRecipes
         } else {
             return listOf()
@@ -277,4 +278,7 @@ object STUB {
         return categories
     }
 
+    fun getRecipeById(id: Int): Recipe? {
+        return burgerRecipes.find { it.id == id } ?: burgerRecipes[0]
+    }
 }
