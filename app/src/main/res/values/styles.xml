@@ -31,5 +31,9 @@
         <item name="android:clickable">true</item>
         <item name="android:focusable">true</item>
     </style>
+    <style name="RecycleRecipeStyle">
+        <item name="backgroundColor">@color/white</item>
+        <item name="cornerRadius">@dimen/half_padding</item>
+    </style>
 
 </resources>

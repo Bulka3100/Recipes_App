@@ -1,6 +1,7 @@
 package com.example.recipesapp
 
 import android.content.res.Resources
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.recipesapp.Data_Classes.Recipe
 import com.example.recipesapp.RecipesListFragment.Companion.ARG_RECIPE
 import com.example.recipesapp.databinding.RecipeFragmentBinding
@@ -15,7 +17,8 @@ import com.google.android.material.divider.MaterialDividerItemDecoration
 
 class RecipeFragment : Fragment() {
     private var _binding: RecipeFragmentBinding? = null
-    private val binding get() = _binding ?: throw IllegalStateException("Binding не инициализирован")
+    private val binding
+        get() = _binding ?: throw IllegalStateException("Binding не инициализирован")
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -52,30 +55,34 @@ class RecipeFragment : Fragment() {
     }
 
     private fun initRecycler(recipe: Recipe) {
-        with(binding.rvIngredients) {
+        binding.rvIngredients.apply {
             adapter = IngredientsAdapter(recipe.ingredients)
-            addItemDecoration(
-                MaterialDividerItemDecoration(context, LinearLayoutManager.VERTICAL).apply {
-                    dividerThickness = 1.dp
-                    isLastItemDecorated = false
-                }
-            )
+            addMaterialDivider(this)
         }
+
 
         with(binding.rvMethod) {
             adapter = MethodAdapter(recipe.method)
-            addItemDecoration(
-                MaterialDividerItemDecoration(context, LinearLayoutManager.VERTICAL).apply {
-                    dividerThickness = 1.dp
-                    isLastItemDecorated = false
-                }
-            )
+            addMaterialDivider(this)
         }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+
+    private fun addMaterialDivider(rv: RecyclerView) {
+        rv.addItemDecoration(
+            MaterialDividerItemDecoration(requireContext(), LinearLayoutManager.VERTICAL).apply {
+                dividerThickness = 1.dp
+                isLastItemDecorated = false
+                dividerColor = Color.parseColor("#F5F5F5")
+                dividerInsetStart = 12.dp
+                dividerInsetEnd = 12.dp
+            }
+        )
     }
 
     // Расширение для dp

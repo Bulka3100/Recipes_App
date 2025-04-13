@@ -22,8 +22,8 @@ class MethodAdapter(private val dataSet: List<String>) :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val step = dataSet[position]
         with(holder.binding) {
-            tvStep.text = "${position + 1}."
-            tvText.text = step
+
+            tvText.text = "${position + 1}."+ step
         }
     }
 
