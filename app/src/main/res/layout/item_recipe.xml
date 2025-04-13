@@ -6,7 +6,8 @@
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="@dimen/half_padding"
     android:layout_marginBottom="@dimen/main_padding"
-    style="@style/CardViewRippleStyle">
+    style="@style/CardViewRippleStyle"
+    app:cardCornerRadius="@dimen/half_padding">
 
 
     <LinearLayout
