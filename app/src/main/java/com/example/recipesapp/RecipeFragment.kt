@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SeekBar
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -58,6 +59,8 @@ class RecipeFragment : Fragment() {
         binding.rvIngredients.apply {
             adapter = IngredientsAdapter(recipe.ingredients)
             addMaterialDivider(this)
+
+
         }
 
 
@@ -65,6 +68,19 @@ class RecipeFragment : Fragment() {
             adapter = MethodAdapter(recipe.method)
             addMaterialDivider(this)
         }
+        binding.sbRecipeSeek.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+//                    вот эта часть мне не нравится я же тут по сути пересоздаю адаптер заново, плохая практика. А это callback кстати? запутался
+                IngredientsAdapter(recipe.ingredients).updateIngredients(progress)
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar) {
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar) {
+            }
+        })
+
     }
 
     override fun onDestroyView() {

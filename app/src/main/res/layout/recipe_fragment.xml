@@ -57,15 +57,47 @@
             style="@style/StyleTitle20"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/main_padding"
+            android:layout_marginStart="@dimen/main_padding"
+            android:layout_marginTop="@dimen/main_padding"
             android:text="@string/ingridients" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:textSize="16sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/main_padding"
+                android:text="@string/portions" />
+
+            <TextView
+                android:textSize="16sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0" />
+
+        </LinearLayout>
+
+        <SeekBar
+            tools:progress="3"
+            style="@style/styleSeekBar"
+            android:id="@+id/sbRecipeSeek"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/half_padding"
+            android:max="5"
+            android:min="1"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvIngredients"
-android:background="@drawable/recycle_recipe_shape"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/main_padding"
+            android:layout_marginTop="@dimen/main_padding"
+            android:background="@drawable/recycle_recipe_shape"
             android:orientation="vertical"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
@@ -77,11 +109,11 @@ android:background="@drawable/recycle_recipe_shape"
             android:text="@string/method" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:background="@drawable/recycle_recipe_shape"
             android:id="@+id/rvMethod"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/main_padding"
+            android:background="@drawable/recycle_recipe_shape"
             android:orientation="vertical"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
     </LinearLayout>

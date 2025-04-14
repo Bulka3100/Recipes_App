@@ -4,7 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginVertical="@dimen/main_padding">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -12,6 +13,8 @@
         android:orientation="horizontal">
 
         <TextView
+            style="@style/rvRecipestext14"
+
             android:layout_marginEnd="@dimen/half_padding"
             android:id="@+id/tvQuantity"
             android:layout_width="wrap_content"
@@ -22,6 +25,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
+            style="@style/rvRecipestext14"
             android:id="@+id/tvIngridient"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -32,6 +36,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
+            style="@style/rvRecipestext14"
             android:layout_marginEnd="12dp"
             android:id="@+id/tvUnit"
             android:layout_width="wrap_content"

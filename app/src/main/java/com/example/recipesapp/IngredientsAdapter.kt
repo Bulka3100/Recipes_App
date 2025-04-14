@@ -1,21 +1,35 @@
 package com.example.recipesapp
 
 
-import android.content.Context
-import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.recipesapp.Data_Classes.Category
 import com.example.recipesapp.Data_Classes.Ingredient
-import com.example.recipesapp.databinding.ItemCategoryBinding
 import com.example.recipesapp.databinding.ItemIngredientsBinding
-import java.io.InputStream
 
 class IngredientsAdapter(private val dataSet: List<Ingredient>) :
     RecyclerView.Adapter<IngredientsAdapter.ViewHolder>() {
+    fun updateIngredients(progress: Int) {
+        quantity = progress
+    }
+
+    var quantity: Int = 1
 
     class ViewHolder(val binding: ItemIngredientsBinding) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(ingredient: Ingredient, quantity: Int) {
+            ingredientTextView.text = ingredient.description
+            val amount = ingredient.quantity.toIntOrNull() ?: 0
+            val newAmount = (amount * quantity)
+            //не думаю что лучший вариант
+            val newAmountFormated = if (newAmount % 1.0 == 0.0) {
+                newAmount.toString()
+            } else {
+                String.format("%.1f", newAmount)
+            }
+            quantityTextView.text = newAmountFormated
+            unitOfMeasureTextView.text = ingredient.unitOfMeasure
+        }
+
         val ingredientTextView = binding.tvIngridient
         val quantityTextView = binding.tvQuantity
         val unitOfMeasureTextView = binding.tvUnit
@@ -29,11 +43,9 @@ class IngredientsAdapter(private val dataSet: List<Ingredient>) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val ingridient = dataSet[position]
-        //нужно было вынести переменные выше чтобы тут удобнее обозначить? А не легче бы было использовать конструкцию with или вообще отдельную функцию bind создать? Как правильно?
-        holder.ingredientTextView.text = ingridient.description
-        holder.quantityTextView.text = ingridient.quantity
-        holder.unitOfMeasureTextView.text = ingridient.unitOfMeasure
+        val ingredient = dataSet[position]
+        //вот так вроде неплохо получилось, спасибо)
+        holder.bind(ingredient, quantity)
     }
 
     override fun getItemCount(): Int = dataSet.size
