@@ -83,7 +83,6 @@
 
         <SeekBar
             tools:progress="3"
-            style="@style/styleSeekBar"
             android:id="@+id/sbRecipeSeek"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
