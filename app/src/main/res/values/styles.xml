@@ -31,5 +31,19 @@
         <item name="android:clickable">true</item>
         <item name="android:focusable">true</item>
     </style>
+    <style name="RecycleRecipeStyle">
+        <item name="backgroundColor">@color/white</item>
+        <item name="cornerRadius">@dimen/half_padding</item>
+    </style>
+    <style name="styleSeekBar">
+        <item name="android:thumb">@drawable/shape_seekbar_thumb</item>
+        <item name="android:progressDrawable">@drawable/shape_seekbar_progress</item>
+    </style>
+<style name="rvRecipestext14">
+    <item name="android:textSize">14sp</item>
+    <item name="android:textAllCaps">true</item>
+    <item name="android:textColor">#666666</item>
+    <item name="android:fontFamily">@font/montserrat_regular</item>
+</style>
 
 </resources>

@@ -2,12 +2,12 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/CardViewRippleStyle"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="@dimen/half_padding"
     android:layout_marginBottom="@dimen/main_padding"
-    style="@style/CardViewRippleStyle">
-
+    app:cardCornerRadius="@dimen/half_padding">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -26,7 +26,8 @@
             style="@style/StyleTitle14Category"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/half_padding"
+            android:layout_marginLeft="@dimen/half_padding"
+            android:layout_marginTop="@dimen/half_padding"
             android:text="@string/categories"
             android:textSize="@dimen/card_text_size_title"
             app:layout_constraintBottom_toTopOf="@+id/tvDescription"

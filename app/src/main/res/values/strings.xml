@@ -3,4 +3,7 @@
     <string name="chosen">избранное</string>
     <string name="categories">категории</string>
     <string name="recipe">recipe</string>
+    <string name="ingridients">"ингридиенты "</string>
+    <string name="method">способ приготовления</string>
+    <string name="portions">Порции:</string>
 </resources>
