@@ -11,12 +11,13 @@ import java.math.RoundingMode
 class IngredientsAdapter(private val dataSet: List<Ingredient>) :
     RecyclerView.Adapter<IngredientsAdapter.ViewHolder>() {
 
-    var quantity: Int = 1
 
+//вроде все равно не обновляется
     fun updateIngredients(progress: Int) {
         quantity = progress
         notifyDataSetChanged()
     }
+    var quantity: Int = 1
 
     class ViewHolder(val binding: ItemIngredientsBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(ingredient: Ingredient, quantity: Int) {
