@@ -72,6 +72,8 @@ class RecipeFragment : Fragment() {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
 //                    вот эта часть мне не нравится я же тут по сути пересоздаю адаптер заново, плохая практика. А это callback кстати? запутался
                 IngredientsAdapter(recipe.ingredients).updateIngredients(progress)
+                //нормально тут изменять количество ингредиентов?
+                binding.tvPortionsCount.text = progress.toString()
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar) {
