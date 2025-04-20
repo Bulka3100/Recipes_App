@@ -11,7 +11,7 @@ import java.math.RoundingMode
 class IngredientsAdapter(private val dataSet: List<Ingredient>) :
     RecyclerView.Adapter<IngredientsAdapter.ViewHolder>() {
 
-
+// нет же обновления вроде?
 //вроде все равно не обновляется
     fun updateIngredients(progress: Int) {
         quantity = progress
