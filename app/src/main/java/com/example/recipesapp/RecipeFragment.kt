@@ -51,6 +51,10 @@ class RecipeFragment : Fragment() {
     private fun initUI(recipe: Recipe) {
         with(binding) {
             tvRecipeName.text = recipe.title
+            ibFavorite.setImageResource(R.drawable.ic_heart_empty)
+            ibFavorite.setOnClickListener{
+                ibFavorite.setImageResource(R.drawable.ic_heart)
+            }
 
         }
     }
