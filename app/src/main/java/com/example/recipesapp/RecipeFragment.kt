@@ -52,28 +52,18 @@ class RecipeFragment : Fragment() {
     private fun initUI(recipe: Recipe) {
         with(binding) {
             tvRecipeName.text = recipe.title
+            var isFavorite = false
             ibFavorite.setImageResource(R.drawable.ic_heart_empty)
+
             ibFavorite.setOnClickListener{
-                ibFavorite.setImageResource(R.drawable.ic_heart)
+                isFavorite = !isFavorite
+                ibFavorite.setImageResource(if (isFavorite) R.drawable.ic_heart else R.drawable.ic_heart_empty)
             }
 
         }
     }
-//    верно ли его вынести в эту часть?
-private val sharedPrefs =requireContext().getSharedPreferences(
-    PREFS_NAME,
-    Context.MODE_PRIVATE
-)
 
-private fun saveFavorites(set: Set<String>){
-    val editor = sharedPrefs.edit()
-    editor.putStringSet(KEY_FAVORITES, set)
-    editor.apply()
-}
-    private fun getFavorites():MutableSet<String> {
-        val favoritesId =sharedPrefs.getStringSet(KEY_FAVORITES, emptySet())
-        return HashSet(favoritesId ?: emptySet())
-    }
+
 
     private fun initRecycler(recipe: Recipe) {
         binding.rvIngredients.apply {

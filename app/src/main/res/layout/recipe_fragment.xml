@@ -31,14 +31,16 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageButton
-                style="@style/imFavorites"
+                android:contentDescription="addFavorite"
+                style="@style/ibFavorites"
                 android:id="@+id/ibFavorite"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/main_padding"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:src="@drawable/ic_heart_empty" />
+
+                />
 
             <TextView
                 android:id="@+id/tvRecipeName"
