@@ -1,5 +1,6 @@
 package com.example.recipesapp
 
+import android.content.Context
 import android.content.res.Resources
 import android.graphics.Color
 import android.os.Build
@@ -58,6 +59,21 @@ class RecipeFragment : Fragment() {
 
         }
     }
+//    верно ли его вынести в эту часть?
+private val sharedPrefs =requireContext().getSharedPreferences(
+    PREFS_NAME,
+    Context.MODE_PRIVATE
+)
+
+private fun saveFavorites(set: Set<String>){
+    val editor = sharedPrefs.edit()
+    editor.putStringSet(KEY_FAVORITES, set)
+    editor.apply()
+}
+    private fun getFavorites():MutableSet<String> {
+        val favoritesId =sharedPrefs.getStringSet(KEY_FAVORITES, emptySet())
+        return HashSet(favoritesId ?: emptySet())
+    }
 
     private fun initRecycler(recipe: Recipe) {
         binding.rvIngredients.apply {
@@ -106,7 +122,10 @@ class RecipeFragment : Fragment() {
             }
         )
     }
-
+companion object{
+    const val PREFS_NAME = "recipePrefs"
+    const val KEY_FAVORITES = "favorite_recipe_id"
+}
     // Расширение для dp
     private val Int.dp: Int
         get() = (this * Resources.getSystem().displayMetrics.density).toInt()
