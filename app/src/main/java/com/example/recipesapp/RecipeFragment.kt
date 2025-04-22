@@ -65,7 +65,7 @@ class RecipeFragment : Fragment() {
                 val updatedFavorites = getFavorites()
                 isFavorite = !isFavorite
                 if (isFavorite) {
-                    updatedFavorites.add(recipe.id.toString()) 
+                    updatedFavorites.add(recipe.id.toString())
                 } else {
                     updatedFavorites.remove(recipe.id.toString())
                 }
