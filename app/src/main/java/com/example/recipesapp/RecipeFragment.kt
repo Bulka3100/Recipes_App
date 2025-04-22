@@ -22,7 +22,7 @@ class RecipeFragment : Fragment() {
     private val binding
         get() = _binding ?: throw IllegalStateException("Binding не инициализирован")
 
-    // Lazy-инициализация sharedPrefs для безопасного доступа к контексту
+    // Lazy-инициализация зачем тут? Она всегда для shared?
     private val sharedPrefs by lazy {
         requireContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
     }
