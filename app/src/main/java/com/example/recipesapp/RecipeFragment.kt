@@ -1,5 +1,6 @@
 package com.example.recipesapp
 
+import android.content.Context
 import android.content.res.Resources
 import android.graphics.Color
 import android.os.Build
@@ -51,9 +52,18 @@ class RecipeFragment : Fragment() {
     private fun initUI(recipe: Recipe) {
         with(binding) {
             tvRecipeName.text = recipe.title
+            var isFavorite = false
+            ibFavorite.setImageResource(R.drawable.ic_heart_empty)
+
+            ibFavorite.setOnClickListener{
+                isFavorite = !isFavorite
+                ibFavorite.setImageResource(if (isFavorite) R.drawable.ic_heart else R.drawable.ic_heart_empty)
+            }
 
         }
     }
+
+
 
     private fun initRecycler(recipe: Recipe) {
         binding.rvIngredients.apply {
@@ -102,7 +112,10 @@ class RecipeFragment : Fragment() {
             }
         )
     }
-
+companion object{
+    const val PREFS_NAME = "recipePrefs"
+    const val KEY_FAVORITES = "favorite_recipe_id"
+}
     // Расширение для dp
     private val Int.dp: Int
         get() = (this * Resources.getSystem().displayMetrics.density).toInt()

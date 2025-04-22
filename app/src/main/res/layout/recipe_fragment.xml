@@ -30,13 +30,17 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <ImageView
+            <ImageButton
+                android:contentDescription="addFavorite"
+                style="@style/ibFavorites"
+                android:id="@+id/ibFavorite"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/main_padding"
-                android:src="@drawable/ic_heart_empty"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+
+                />
 
             <TextView
                 android:id="@+id/tvRecipeName"
