@@ -65,11 +65,11 @@ class RecipeFragment : Fragment() {
                 val updatedFavorites = getFavorites()
                 isFavorite = !isFavorite
                 if (isFavorite) {
-                    updatedFavorites.add(recipe.id.toString()) // Добавляем в избранное
+                    updatedFavorites.add(recipe.id.toString()) 
                 } else {
-                    updatedFavorites.remove(recipe.id.toString()) // Удаляем из избранного
+                    updatedFavorites.remove(recipe.id.toString())
                 }
-                saveFavorites(updatedFavorites) // Сохраняем изменения
+                saveFavorites(updatedFavorites)
                 ibFavorite.setImageResource(if (isFavorite) R.drawable.ic_heart else R.drawable.ic_heart_empty)
             }
         }
