@@ -17,9 +17,12 @@ class FavoritesFragment : Fragment() {
     private var _binding: FragmentFavoritesBinding? = null
     private val binding get() = _binding ?: throw IllegalStateException("пустой фрагмент")
     private val sharedPrefs by lazy {
-        requireContext().getSharedPreferences(RecipeFragment.PREFS_NAME,
-            Context.MODE_PRIVATE)
+        requireContext().getSharedPreferences(
+            RecipeFragment.PREFS_NAME,
+            Context.MODE_PRIVATE
+        )
     }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -31,15 +34,19 @@ class FavoritesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-initRecycler()
+        initRecycler()
     }
-    private fun initRecycler(){
+
+    private fun initRecycler() {
+
         val favorites = getFavorites()
-        val favoriteIds = favorites.mapNotNull { it.toInt() }.toSet()
-       val favoriteRecipes = STUB.getRecipesbyIds(favoriteIds)
+        val favoriteIds = favorites.mapNotNull { it.toIntOrNull() }.toSet()
+        val favoriteRecipes = STUB.getRecipesByIds(favoriteIds)
         val adapter = RecipesListAdapter(favoriteRecipes)
+        //запутался тут же обязательно эта строчка нужна?
+        binding.rvFavoriteRecipes.adapter = adapter
         adapter.setOnItemClickListener(
-            object :RecipesListAdapter.OnItemClickListener{
+            object : RecipesListAdapter.OnItemClickListener {
                 override fun onItemClick(recipeId: Int) {
                     openRecipeByRecipeId(recipeId)
                 }
@@ -47,10 +54,11 @@ initRecycler()
         )
     }
 
-    private fun getFavorites():MutableSet<String>{
+    private fun getFavorites(): MutableSet<String> {
         val getId = sharedPrefs.getStringSet(RecipeFragment.KEY_FAVORITES, emptySet<String>())
         return HashSet(getId ?: emptySet())
     }
+
     private fun openRecipeByRecipeId(recipeId: Int) {
         val recipe = STUB.getRecipeById(recipeId)
         parentFragmentManager.commit {
@@ -62,9 +70,8 @@ initRecycler()
     }
 
 
-
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding=null
+        _binding = null
     }
 }
