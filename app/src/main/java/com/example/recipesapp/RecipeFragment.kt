@@ -22,6 +22,11 @@ class RecipeFragment : Fragment() {
     private val binding
         get() = _binding ?: throw IllegalStateException("Binding не инициализирован")
 
+    // Lazy обязательно для SP? Вообще правильно ли все тут описал по структуре и расположению?
+    private val sharedPrefs by lazy {
+        requireContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -52,54 +57,53 @@ class RecipeFragment : Fragment() {
     private fun initUI(recipe: Recipe) {
         with(binding) {
             tvRecipeName.text = recipe.title
-            var isFavorite = false
-            ibFavorite.setImageResource(R.drawable.ic_heart_empty)
+            val favorites = getFavorites()
+            ibFavorite.setImageResource(if (getFavorites().contains(recipe.id.toString())) R.drawable.ic_heart else R.drawable.ic_heart_empty)
 
-            ibFavorite.setOnClickListener{
-                isFavorite = !isFavorite
-                ibFavorite.setImageResource(if (isFavorite) R.drawable.ic_heart else R.drawable.ic_heart_empty)
+            ibFavorite.setOnClickListener {
+                val updatedFavorites = getFavorites()
+                if(getFavorites().contains(recipe.id.toString()))
+                {
+                    updatedFavorites.remove(recipe.id.toString())
+                } else {
+                    updatedFavorites.add(recipe.id.toString())
+                }
+                saveFavorites(updatedFavorites)
+                ibFavorite.setImageResource(if (getFavorites().contains(recipe.id.toString())) R.drawable.ic_heart else R.drawable.ic_heart_empty)
             }
-
         }
     }
 
-
-
     private fun initRecycler(recipe: Recipe) {
+        val ingredientsAdapter = IngredientsAdapter(recipe.ingredients)
         binding.rvIngredients.apply {
-            adapter = IngredientsAdapter(recipe.ingredients)
+            adapter = ingredientsAdapter
             addMaterialDivider(this)
-
-
         }
-
 
         with(binding.rvMethod) {
             adapter = MethodAdapter(recipe.method)
             addMaterialDivider(this)
         }
+
         binding.sbRecipeSeek.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-//                    вот эта часть мне не нравится я же тут по сути пересоздаю адаптер заново, плохая практика. А это callback кстати? запутался
-                IngredientsAdapter(recipe.ingredients).updateIngredients(progress)
-                //нормально тут изменять количество ингредиентов?
+                ingredientsAdapter.updateIngredients(progress)
                 binding.tvPortionsCount.text = progress.toString()
             }
 
-            override fun onStartTrackingTouch(seekBar: SeekBar) {
-            }
-
-            override fun onStopTrackingTouch(seekBar: SeekBar) {
-            }
+            override fun onStartTrackingTouch(seekBar: SeekBar) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar) {}
         })
-
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+    private fun saveFavorites(set: Set<String>) {
+        sharedPrefs.edit().putStringSet(KEY_FAVORITES,set).commit()
     }
 
+    private fun getFavorites(): MutableSet<String> {
+        return HashSet(sharedPrefs.getStringSet(KEY_FAVORITES, emptySet<String>()) ?: emptySet())
+    }
 
     private fun addMaterialDivider(rv: RecyclerView) {
         rv.addItemDecoration(
@@ -112,10 +116,17 @@ class RecipeFragment : Fragment() {
             }
         )
     }
-companion object{
-    const val PREFS_NAME = "recipePrefs"
-    const val KEY_FAVORITES = "favorite_recipe_id"
-}
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    companion object {
+        const val PREFS_NAME = "recipePrefs"
+        const val KEY_FAVORITES = "favorite_recipe_id"
+    }
+
     // Расширение для dp
     private val Int.dp: Int
         get() = (this * Resources.getSystem().displayMetrics.density).toInt()
