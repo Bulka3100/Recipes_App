@@ -64,9 +64,9 @@ class RecipeFragment : Fragment() {
                 val updatedFavorites = getFavorites()
                 if(getFavorites().contains(recipe.id.toString()))
                 {
-                    updatedFavorites.add(recipe.id.toString())
-                } else {
                     updatedFavorites.remove(recipe.id.toString())
+                } else {
+                    updatedFavorites.add(recipe.id.toString())
                 }
                 saveFavorites(updatedFavorites)
                 ibFavorite.setImageResource(if (getFavorites().contains(recipe.id.toString())) R.drawable.ic_heart else R.drawable.ic_heart_empty)
@@ -102,7 +102,6 @@ class RecipeFragment : Fragment() {
     }
 
     private fun getFavorites(): MutableSet<String> {
-        val favoritesId = sharedPrefs.getStringSet(KEY_FAVORITES, emptySet())
         return HashSet(sharedPrefs.getStringSet(KEY_FAVORITES, emptySet<String>()) ?: emptySet())
     }
 
