@@ -31,7 +31,6 @@ class IngredientsAdapter(private val dataSet: List<Ingredient>) :
                 .stripTrailingZeros()
                 .toPlainString()
 
-
             quantityTextView.text = displayQuantity
             unitOfMeasureTextView.text = ingredient.unitOfMeasure
         }
