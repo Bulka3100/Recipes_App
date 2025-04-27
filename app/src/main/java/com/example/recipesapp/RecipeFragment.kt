@@ -22,7 +22,6 @@ class RecipeFragment : Fragment() {
     private val binding
         get() = _binding ?: throw IllegalStateException("Binding не инициализирован")
 
-    // Lazy-инициализация зачем тут? Она всегда для shared?
     private val sharedPrefs by lazy {
         requireContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
     }
@@ -58,19 +57,16 @@ class RecipeFragment : Fragment() {
         with(binding) {
             tvRecipeName.text = recipe.title
             val favorites = getFavorites()
-            var isFavorite = recipe.id.toString() in favorites
-            ibFavorite.setImageResource(if (isFavorite) R.drawable.ic_heart else R.drawable.ic_heart_empty)
+            ibFavorite.setImageResource(if (getFavorites().contains(recipe.id.toString())) R.drawable.ic_heart else R.drawable.ic_heart_empty)
 
             ibFavorite.setOnClickListener {
                 val updatedFavorites = getFavorites()
-                isFavorite = !isFavorite
-                if (isFavorite) {
-                    updatedFavorites.add(recipe.id.toString())
-                } else {
+                if(getFavorites().contains(recipe.id.toString()))
+                {
                     updatedFavorites.remove(recipe.id.toString())
                 }
                 saveFavorites(updatedFavorites)
-                ibFavorite.setImageResource(if (isFavorite) R.drawable.ic_heart else R.drawable.ic_heart_empty)
+                ibFavorite.setImageResource(if (getFavorites().contains(recipe.id.toString())) R.drawable.ic_heart else R.drawable.ic_heart_empty)
             }
         }
     }
@@ -99,14 +95,11 @@ class RecipeFragment : Fragment() {
     }
 
     private fun saveFavorites(set: Set<String>) {
-        val editor = sharedPrefs.edit()
-        editor.putStringSet(KEY_FAVORITES, set)
-        editor.apply()
+        sharedPrefs.edit().putStringSet(KEY_FAVORITES,set).commit()
     }
 
     private fun getFavorites(): MutableSet<String> {
-        val favoritesId = sharedPrefs.getStringSet(KEY_FAVORITES, emptySet())
-        return HashSet(favoritesId ?: emptySet())
+        return HashSet(sharedPrefs.getStringSet(KEY_FAVORITES, emptySet<String>()) ?: emptySet())
     }
 
     private fun addMaterialDivider(rv: RecyclerView) {
