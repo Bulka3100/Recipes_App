@@ -76,12 +76,9 @@ class RecipesListFragment : Fragment() {
 
     private fun openRecipeByRecipeId(recipeId: Int) {
         val recipe = STUB.getRecipeById(recipeId)
-        val bundle = bundleOf(
-            ARG_RECIPE to recipe
-        )
         //можно иначе передавать в replace? не понимаю зачем::class
         parentFragmentManager.commit {
-            replace<RecipeFragment>(R.id.mainContainer, args = bundle)
+            replace<RecipeFragment>(R.id.mainContainer, args = bundleOf(ARG_RECIPE to recipe))
             addToBackStack(null)
             setReorderingAllowed(true)
         }

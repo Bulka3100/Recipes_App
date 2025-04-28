@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
@@ -43,7 +44,8 @@ class FavoritesFragment : Fragment() {
         val favoriteIds = favorites.mapNotNull { it.toIntOrNull() }.toSet()
         val favoriteRecipes = STUB.getRecipesByIds(favoriteIds)
         val adapter = RecipesListAdapter(favoriteRecipes)
-        //запутался тут же обязательно эта строчка нужна?
+        // нормально что в этом месте в коде это ввел? Не знаю где еще. также как я понял если нет данных ресайклер убирается с видимости и проблем с расположением не будет?
+        binding.tvNoFavorites.isVisible = favorites.isEmpty()
         binding.rvFavoriteRecipes.adapter = adapter
         adapter.setOnItemClickListener(
             object : RecipesListAdapter.OnItemClickListener {
@@ -58,13 +60,15 @@ class FavoritesFragment : Fragment() {
         val getId = sharedPrefs.getStringSet(RecipeFragment.KEY_FAVORITES, emptySet<String>())
         return HashSet(getId ?: emptySet())
     }
-
+// видимо потерялся в коде и забыл. Можешь объяснить зачем нам тут новая часть с bundle  как мы ее вызвали если у нас эта константа вообще в другом месте. Это новая передача? upd пока фиксил остальное вроде разобрался, но лучше еще раз проговори
     private fun openRecipeByRecipeId(recipeId: Int) {
         val recipe = STUB.getRecipeById(recipeId)
-        parentFragmentManager.commit {
-            replace<RecipeFragment>(R.id.mainContainer)
-            addToBackStack(null)
-            setReorderingAllowed(true)
+        if (recipe != null) {
+            parentFragmentManager.commit {
+                replace<RecipeFragment>(R.id.mainContainer, args = bundleOf(ARG_RECIPE to recipe))
+                addToBackStack(null)
+                setReorderingAllowed(true)
+            }
         }
 
     }

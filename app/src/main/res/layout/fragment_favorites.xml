@@ -11,12 +11,12 @@
         android:layout_height="@dimen/category_height">
 
         <ImageView
-            android:contentDescription="favoriteImage"
-            android:src="@drawable/img_favorites"
             android:id="@+id/ivRecipeCategory"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:contentDescription="favoriteImage"
             android:scaleType="centerCrop"
+            android:src="@drawable/img_favorites"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -40,6 +40,16 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <TextView
+        android:id="@+id/tvNoFavorites"
+        style="@style/StyleTitle16"
+        android:layout_width="328dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="202dp"
+        android:gravity="center"
+        android:text="Вы еще не добавили ни одного рецепта в избранное" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvFavoriteRecipes"
         android:layout_width="match_parent"
@@ -49,6 +59,7 @@
         android:layout_marginBottom="@dimen/category_bottom"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:itemCount="8"
-        tools:listitem="@layout/item_recipe" />
+        tools:listitem="@layout/item_recipe"
+        tools:visibility="gone" />
 
 </LinearLayout>

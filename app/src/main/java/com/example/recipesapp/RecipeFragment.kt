@@ -61,10 +61,13 @@ class RecipeFragment : Fragment() {
 
             ibFavorite.setOnClickListener {
                 val updatedFavorites = getFavorites()
-                if(getFavorites().contains(recipe.id.toString()))
+                if(updatedFavorites.contains(recipe.id.toString()))
                 {
                     updatedFavorites.remove(recipe.id.toString())
+                } else{
+                    updatedFavorites.add((recipe.id.toString()))
                 }
+
                 saveFavorites(updatedFavorites)
                 ibFavorite.setImageResource(if (getFavorites().contains(recipe.id.toString())) R.drawable.ic_heart else R.drawable.ic_heart_empty)
             }
