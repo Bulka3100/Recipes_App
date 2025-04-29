@@ -22,7 +22,6 @@ class RecipeFragment : Fragment() {
     private val binding
         get() = _binding ?: throw IllegalStateException("Binding не инициализирован")
 
-    // Lazy обязательно для SP? Вообще правильно ли все тут описал по структуре и расположению?
     private val sharedPrefs by lazy {
         requireContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
     }
@@ -62,12 +61,13 @@ class RecipeFragment : Fragment() {
 
             ibFavorite.setOnClickListener {
                 val updatedFavorites = getFavorites()
-                if(getFavorites().contains(recipe.id.toString()))
+                if(updatedFavorites.contains(recipe.id.toString()))
                 {
                     updatedFavorites.remove(recipe.id.toString())
-                } else {
-                    updatedFavorites.add(recipe.id.toString())
+                } else{
+                    updatedFavorites.add((recipe.id.toString()))
                 }
+
                 saveFavorites(updatedFavorites)
                 ibFavorite.setImageResource(if (getFavorites().contains(recipe.id.toString())) R.drawable.ic_heart else R.drawable.ic_heart_empty)
             }

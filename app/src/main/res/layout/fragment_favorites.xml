@@ -1,18 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/main">
+    android:orientation="vertical">
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/category_height">
+
+        <ImageView
+            android:id="@+id/ivRecipeCategory"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:contentDescription="favoriteImage"
+            android:scaleType="centerCrop"
+            android:src="@drawable/img_favorites"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvFavorites"
+            style="@style/StyleTitle20"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/main_padding"
+            android:layout_marginBottom="@dimen/main_padding"
+            android:background="@drawable/shape_drawable"
+            android:fontFamily="@font/montserrat_alternates_semibold"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="@string/categories"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
+        android:id="@+id/tvNoFavorites"
+        style="@style/StyleTitle16"
+        android:layout_width="328dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="202dp"
+        android:gravity="center"
+        android:text="Вы еще не добавили ни одного рецепта в избранное" />
 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="favorites_fragment"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvFavoriteRecipes"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginHorizontal="@dimen/half_padding"
+        android:layout_marginTop="@dimen/main_padding"
+        android:layout_marginBottom="@dimen/category_bottom"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:itemCount="8"
+        tools:listitem="@layout/item_recipe"
+        tools:visibility="gone" />
+
+</LinearLayout>
