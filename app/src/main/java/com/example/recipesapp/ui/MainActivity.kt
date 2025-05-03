@@ -1,11 +1,12 @@
-package com.example.recipesapp
+package com.example.recipesapp.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.commit
+import com.example.recipesapp.R
 import com.example.recipesapp.databinding.ActivityMainBinding
+import com.example.recipesapp.ui.category.CategoriesListFragment
+import com.example.recipesapp.ui.recipe.favorites.FavoritesFragment
 
 class MainActivity : AppCompatActivity() {
     private var _binding: ActivityMainBinding? = null

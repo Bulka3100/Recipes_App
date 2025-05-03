@@ -1,11 +1,11 @@
-package com.example.recipesapp
+package com.example.recipesapp.ui.category
 
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.recipesapp.Data_Classes.Category
+import com.example.recipesapp.model.Category
 import com.example.recipesapp.databinding.ItemCategoryBinding
 import java.io.InputStream
 
