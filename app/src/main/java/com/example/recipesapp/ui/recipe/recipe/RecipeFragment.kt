@@ -1,4 +1,4 @@
-package com.example.recipesapp
+package com.example.recipesapp.ui.recipe.recipe
 
 import android.content.Context
 import android.content.res.Resources
@@ -12,9 +12,12 @@ import android.widget.SeekBar
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.recipesapp.Data_Classes.Recipe
-import com.example.recipesapp.RecipesListFragment.Companion.ARG_RECIPE
+import com.example.recipesapp.model.Recipe
+import com.example.recipesapp.R
+import com.example.recipesapp.ui.recipe.recipesList.RecipesListFragment.Companion.ARG_RECIPE
 import com.example.recipesapp.databinding.RecipeFragmentBinding
+import com.example.recipesapp.ui.IngredientsAdapter
+import com.example.recipesapp.ui.MethodAdapter
 import com.google.android.material.divider.MaterialDividerItemDecoration
 
 class RecipeFragment : Fragment() {

@@ -1,9 +1,9 @@
-package com.example.recipesapp
+package com.example.recipesapp.ui.recipe.recipesList
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.recipesapp.Data_Classes.Recipe
+import com.example.recipesapp.model.Recipe
 import com.example.recipesapp.databinding.ItemRecipeBinding
 
 class RecipesListAdapter(private val recipes: List<Recipe>) :
