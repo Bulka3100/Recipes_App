@@ -5,8 +5,8 @@ import com.example.recipesapp.model.Recipe
 
 class RecipeViewModel : ViewModel() {
     data class RecipeUiState(
-        var isFavorite: Boolean = false,
-        var recipe: Recipe? = null,
-        var recipePic: String? = null,
+        val isFavorite: Boolean = false,
+        val recipe: Recipe? = null,
+        val portionsCount: Int = 1
     )
 }

@@ -1,4 +1,4 @@
-package com.example.recipesapp.ui.category
+package com.example.recipesapp.ui.categories
 
 import android.content.Context
 import android.graphics.drawable.Drawable

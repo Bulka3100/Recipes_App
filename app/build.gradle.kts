@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.recipesapp"
-        minSdk = 28
+        minSdk = 25
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -40,6 +40,10 @@ android {
 }
 
 dependencies {
+    androidTestImplementation ("androidx.test.espresso:espresso-core:3.5.0")
+    androidTestImplementation ("androidx.test:runner:1.5.0")
+    androidTestImplementation ("androidx.test:rules:1.5.0")
+    androidTestImplementation ("androidx.test.ext:junit:1.1.5")
     implementation (libs.androidx.recyclerview)
     implementation(libs.androidx.fragment.ktx)
     implementation(libs.androidx.core.ktx)

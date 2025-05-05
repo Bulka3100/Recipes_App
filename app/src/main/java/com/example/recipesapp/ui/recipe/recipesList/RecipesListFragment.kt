@@ -11,7 +11,7 @@ import androidx.fragment.app.replace
 import com.example.recipesapp.R
 import com.example.recipesapp.data.STUB
 import com.example.recipesapp.databinding.FragmentRecipesBinding
-import com.example.recipesapp.ui.category.CategoriesListFragment
+import com.example.recipesapp.ui.categories.CategoriesListFragment
 import com.example.recipesapp.ui.recipe.recipe.RecipeFragment
 
 class RecipesListFragment : Fragment() {
