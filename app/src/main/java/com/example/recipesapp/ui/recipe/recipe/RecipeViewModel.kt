@@ -14,16 +14,16 @@ import com.example.recipesapp.model.Recipe
 import com.example.recipesapp.ui.recipe.recipe.RecipeFragment.Companion.KEY_FAVORITES
 import com.example.recipesapp.ui.recipe.recipe.RecipeFragment.Companion.PREFS_NAME
 
-class RecipeViewModel : AndroidViewModel(application = Application()) {
-    private val savedState: MutableLiveData<RecipeUiState>? = null
+class RecipeViewModel(application: Application) : AndroidViewModel(application) {
+    private val _savedState = MutableLiveData<RecipeUiState>()
+    val savedState: LiveData<RecipeUiState> get() = _savedState
     private val sharedPrefs by lazy {
-        //проблема с видимостью
+
         application.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
     }
 
     // плохо понимаю зачем тут нужно две переменных смысл? посню с binding так делали, там вроде понятно, могла ошибка высветиться. Ксати тут надо обрабатывать ошибку с элвисом? вроде не может быть null а если надо , то как? спасибо
-    val _savedState: LiveData<RecipeUiState>
-        get() = savedState ?: throw IllegalStateException("Null state")
+
 
     data class RecipeUiState(
         val isFavorite: Boolean = false,
@@ -32,7 +32,7 @@ class RecipeViewModel : AndroidViewModel(application = Application()) {
     )
 
     init {
-        savedState?.value = RecipeUiState(isFavorite = false)
+        _savedState.value = RecipeUiState(isFavorite = false)
         Log.i("!!!", "initialized")
 
     }
@@ -42,11 +42,13 @@ class RecipeViewModel : AndroidViewModel(application = Application()) {
         val recipe = STUB.getRecipeById(recipeId)
 
         val isFavorite = recipeId.toString() in getFavorites()
-        savedState?.value = RecipeUiState(
+        val portion = savedState.value?.portionsCount ?: RecipeUiState().portionsCount
+        _savedState.value = RecipeUiState(
             recipe = recipe,
             isFavorite = isFavorite,
             //как взять значение для порций из текущего стйта? так можно?
-            portionsCount = RecipeUiState().portionsCount
+
+            portionsCount = portion
         )
 
     }

@@ -65,7 +65,7 @@ class RecipeFragment : Fragment() {
 
 
     private fun initUI(recipe: Recipe) {
-        viewModel._savedState.observe(viewLifecycleOwner, Observer { state ->
+        viewModel.savedState.observe(viewLifecycleOwner, Observer { state ->
 
             Log.i("!!!", "State changed, isFavorite: ${state.isFavorite}")
             with(binding) {
