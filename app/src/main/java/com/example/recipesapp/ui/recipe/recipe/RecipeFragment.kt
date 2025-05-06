@@ -71,7 +71,7 @@ class RecipeFragment : Fragment() {
             with(binding) {
                 tvRecipeName.text = state.recipe?.title
                 // вот тут тоже странно
-                IvRecipeImage.setImageResource(state.recipe?.imageUrl!!.toInt())
+                IvRecipeImage.setImageDrawable(state.recipeImage)
                 // правильно ли я понял что вся логика построения ui типо определения картинок и ресурсов с текстом должна быть в этой части с observer&
                 if (state.isFavorite == true) {
                     ibFavorite.setImageResource(R.drawable.ic_heart)

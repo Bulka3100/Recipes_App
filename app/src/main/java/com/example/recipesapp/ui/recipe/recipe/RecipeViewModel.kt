@@ -2,6 +2,7 @@ package com.example.recipesapp.ui.recipe.recipe
 
 import android.app.Application
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.util.Log
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.AndroidViewModel
@@ -13,6 +14,8 @@ import com.example.recipesapp.data.STUB
 import com.example.recipesapp.model.Recipe
 import com.example.recipesapp.ui.recipe.recipe.RecipeFragment.Companion.KEY_FAVORITES
 import com.example.recipesapp.ui.recipe.recipe.RecipeFragment.Companion.PREFS_NAME
+import java.io.IOException
+import java.io.InputStream
 
 class RecipeViewModel(application: Application) : AndroidViewModel(application) {
     private val _savedState = MutableLiveData<RecipeUiState>()
@@ -28,7 +31,8 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
     data class RecipeUiState(
         val isFavorite: Boolean = false,
         val recipe: Recipe? = null,
-        val portionsCount: Int = 1
+        val portionsCount: Int = 1,
+        val recipeImage: Drawable? = null
     )
 
     init {
@@ -40,7 +44,22 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
     fun loadRecipe(recipeId: Int) {
 //        TODO  'load from network'
         val recipe = STUB.getRecipeById(recipeId)
-
+        val drawable = if (recipe?.imageUrl != null) {
+            try {
+                // Открываем InputStream из assets
+                val inputStream: InputStream = getApplication<Application>().assets.open(recipe.imageUrl)
+                // Создаём Drawable из InputStream
+                Drawable.createFromStream(inputStream, null).also {
+                    inputStream.close() // Закрываем поток
+                }
+            } catch (e: IOException) {
+                Log.e("RecipeViewModel", "Error loading image from assets: ${e.message}")
+                null
+            }
+        } else {
+            Log.e("RecipeViewModel", "Image path is null")
+            null
+        }
         val isFavorite = recipeId.toString() in getFavorites()
         val portion = savedState.value?.portionsCount ?: RecipeUiState().portionsCount
         _savedState.value = RecipeUiState(
