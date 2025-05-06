@@ -3,13 +3,17 @@ package com.example.recipesapp.ui.recipe.recipe
 import android.content.Context
 import android.content.res.Resources
 import android.graphics.Color
+import android.icu.text.IDNA.Info
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.recipesapp.model.Recipe
@@ -24,7 +28,7 @@ class RecipeFragment : Fragment() {
     private var _binding: RecipeFragmentBinding? = null
     private val binding
         get() = _binding ?: throw IllegalStateException("Binding не инициализирован")
-
+    private val viewModel: RecipeViewModel by viewModels()
     private val sharedPrefs by lazy {
         requireContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
     }
@@ -40,7 +44,9 @@ class RecipeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        viewModel._savedState.observe(viewLifecycleOwner, Observer { state ->
+            Log.i("!!!", "State changed, isFavorite: ${state.isFavorite}")
+        })
         val recipe = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             arguments?.getParcelable(ARG_RECIPE, Recipe::class.java)
         } else {
@@ -64,10 +70,9 @@ class RecipeFragment : Fragment() {
 
             ibFavorite.setOnClickListener {
                 val updatedFavorites = getFavorites()
-                if(updatedFavorites.contains(recipe.id.toString()))
-                {
+                if (updatedFavorites.contains(recipe.id.toString())) {
                     updatedFavorites.remove(recipe.id.toString())
-                } else{
+                } else {
                     updatedFavorites.add((recipe.id.toString()))
                 }
 
@@ -101,7 +106,7 @@ class RecipeFragment : Fragment() {
     }
 
     private fun saveFavorites(set: Set<String>) {
-        sharedPrefs.edit().putStringSet(KEY_FAVORITES,set).commit()
+        sharedPrefs.edit().putStringSet(KEY_FAVORITES, set).commit()
     }
 
     private fun getFavorites(): MutableSet<String> {
