@@ -7,11 +7,12 @@ import androidx.lifecycle.ViewModel
 import com.example.recipesapp.model.Recipe
 
 class RecipeViewModel : ViewModel() {
-    private val savedState: MutableLiveData<RecipeUiState>? = null
+    private val _recipeState = MutableLiveData<RecipeUiState>()
 
     // плохо понимаю зачем тут нужно две переменных смысл? посню с binding так делали, там вроде понятно, могла ошибка высветиться. Ксати тут надо обрабатывать ошибку с элвисом? вроде не может быть null а если надо , то как? спасибо
-    val _savedState: LiveData<RecipeUiState>
-        get() = savedState ?: throw IllegalStateException("Null state")
+    val recipeState: LiveData<RecipeUiState> = _recipeState
+        //тут пока оставлю такие комменты, потом начну оставлять другие. Почему бы не использовать тут get() ? как в binding
+
 
     data class RecipeUiState(
         val isFavorite: Boolean = false,
@@ -20,7 +21,7 @@ class RecipeViewModel : ViewModel() {
     )
 
     init {
-        savedState?.value = RecipeUiState(isFavorite = false)
+        _recipeState.value = RecipeUiState(isFavorite = false)
         Log.i("!!!", "initialized")
     }
 }
