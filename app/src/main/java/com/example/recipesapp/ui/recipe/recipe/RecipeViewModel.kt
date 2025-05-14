@@ -33,8 +33,8 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
 
 
         val isFavorite = recipeId.toString() in getFavorites()
-        //разобрать
-        val portion = _recipeState.value?.portionsCount ?: RecipeUiState().portionsCount
+
+        val portion = recipeState.value?.portionsCount ?: RecipeUiState().portionsCount
         _recipeState.value = RecipeUiState(
             recipe = recipe,
             isFavorite = isFavorite,
@@ -62,6 +62,7 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
         }
 
         saveFavorites(updatedFavorites)
+
     }
 }
 
