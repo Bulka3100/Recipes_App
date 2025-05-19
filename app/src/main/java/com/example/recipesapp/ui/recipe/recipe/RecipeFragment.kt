@@ -49,10 +49,7 @@ class RecipeFragment : Fragment() {
             @Suppress("DEPRECATION")
             arguments?.getParcelable(ARG_RECIPE) as? Recipe
         }
-        binding.ibFavorite.setOnClickListener {
-            //вот тут возникло достаточно вопросов. стоит ли тут кликер ставить, в какой вообще части это нужно. Почему так странно приходится работать с экземпляром рецепта и как этого избежать и почему у меня в других частях этого класса не видит binding просто вне функций например
-            viewModel.onFavoriteClicked(recipe?.id!!.toInt())
-        }
+
 
         if (recipe != null) {
             initUI(recipe)
@@ -65,15 +62,16 @@ class RecipeFragment : Fragment() {
 
 
     private fun initUI(recipe: Recipe) {
+        binding.ibFavorite.setOnClickListener {
+            viewModel.onFavoriteClicked(recipe?.id!!.toInt())
+        }
         viewModel.loadRecipe(recipe.id)
         viewModel.recipeState.observe(viewLifecycleOwner, Observer { state ->
 
             Log.i("!!!", "State changed, isFavorite: ${state.isFavorite}")
             with(binding) {
                 tvRecipeName.text = state.recipe?.title
-                // вот тут тоже странно
-                // правильно ли я понял что вся логика построения ui типо определения картинок и ресурсов с текстом должна быть в этой части с observer&
-                if (state.isFavorite == true) {
+                if (state.isFavorite) {
                     ibFavorite.setImageResource(R.drawable.ic_heart)
                 } else {
                     ibFavorite.setImageResource(R.drawable.ic_heart_empty)
@@ -127,10 +125,7 @@ class RecipeFragment : Fragment() {
         _binding = null
     }
 
-    companion object {
-        const val PREFS_NAME = "recipePrefs"
-        const val KEY_FAVORITES = "favorite_recipe_id"
-    }
+
 
     private val Int.dp: Int
         get() = (this * Resources.getSystem().displayMetrics.density).toInt()
