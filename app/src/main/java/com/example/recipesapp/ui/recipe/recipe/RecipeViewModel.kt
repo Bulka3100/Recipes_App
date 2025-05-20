@@ -2,6 +2,7 @@ package com.example.recipesapp.ui.recipe.recipe
 
 import android.app.Application
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -11,6 +12,8 @@ import com.example.recipesapp.KEY_FAVORITES
 import com.example.recipesapp.PREFS_NAME
 import com.example.recipesapp.data.STUB
 import com.example.recipesapp.model.Recipe
+import java.io.IOException
+import java.io.InputStream
 
 
 class RecipeViewModel(application: Application) : AndroidViewModel(application) {
@@ -25,17 +28,35 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
     data class RecipeUiState(
         val isFavorite: Boolean = false,
         val recipe: Recipe? = null,
-        val portionsCount: Int = 1
+        val portionsCount: Int = 1,
+        val recipeImage: Drawable? = null
     )
 
     fun loadRecipe(recipeId: Int) {
+
 //        TODO  'load from network'
         val recipe = STUB.getRecipeById(recipeId)
+        val drawable = if (recipe?.imageUrl != null) {
+            try {
+                val inputStream: InputStream =
+                    getApplication<Application>().assets.open(recipe.imageUrl)
+                Drawable.createFromStream(inputStream, null).also {
+                    inputStream.close()
+                }
+            } catch (e: IOException) {
+                Log.e("RecipeViewModel", "Error loading image from assets: ${e.message}")
+                null
+            }
+        } else {
+            Log.e("RecipeViewModel", "Image path is null")
+            null
+        }
         val isFavorite = recipeId.toString() in getFavorites()
 
-        _recipeState.value = _recipeState.value?.copy(
+        _recipeState.value = recipeState.value?.copy(
             recipe = recipe,
             isFavorite = isFavorite,
+            recipeImage = drawable,
         )
 
     }

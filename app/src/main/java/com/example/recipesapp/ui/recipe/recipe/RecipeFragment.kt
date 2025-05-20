@@ -70,6 +70,7 @@ class RecipeFragment : Fragment() {
 
             Log.i("!!!", "State changed, isFavorite: ${state.isFavorite}")
             with(binding) {
+                ivRecipe.setImageDrawable(state.recipeImage)
                 tvRecipeName.text = state.recipe?.title
                 if (state.isFavorite) {
                     ibFavorite.setImageResource(R.drawable.ic_heart)
@@ -124,7 +125,6 @@ class RecipeFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-
 
 
     private val Int.dp: Int
