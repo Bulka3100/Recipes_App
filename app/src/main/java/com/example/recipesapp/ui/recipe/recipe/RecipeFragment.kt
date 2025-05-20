@@ -29,9 +29,7 @@ class RecipeFragment : Fragment() {
     private val binding
         get() = _binding ?: throw IllegalStateException("Binding не инициализирован")
     private val viewModel: RecipeViewModel by viewModels()
-    private val sharedPrefs by lazy {
-        requireContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,9 +42,7 @@ class RecipeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.recipeState.observe(viewLifecycleOwner, Observer { state ->
-            Log.i("!!!", "State changed, isFavorite: ${state.isFavorite}")
-        })
+
         val recipe = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             arguments?.getParcelable(ARG_RECIPE, Recipe::class.java)
         } else {
@@ -54,32 +50,38 @@ class RecipeFragment : Fragment() {
             arguments?.getParcelable(ARG_RECIPE) as? Recipe
         }
 
+
         if (recipe != null) {
             initUI(recipe)
             initRecycler(recipe)
         } else {
             binding.tvRecipeName.text = "Рецепт не найден"
         }
+
     }
 
+
     private fun initUI(recipe: Recipe) {
-        with(binding) {
-            tvRecipeName.text = recipe.title
-            val favorites = getFavorites()
-            ibFavorite.setImageResource(if (getFavorites().contains(recipe.id.toString())) R.drawable.ic_heart else R.drawable.ic_heart_empty)
-
-            ibFavorite.setOnClickListener {
-                val updatedFavorites = getFavorites()
-                if (updatedFavorites.contains(recipe.id.toString())) {
-                    updatedFavorites.remove(recipe.id.toString())
-                } else {
-                    updatedFavorites.add((recipe.id.toString()))
-                }
-
-                saveFavorites(updatedFavorites)
-                ibFavorite.setImageResource(if (getFavorites().contains(recipe.id.toString())) R.drawable.ic_heart else R.drawable.ic_heart_empty)
-            }
+        binding.ibFavorite.setOnClickListener {
+            viewModel.onFavoriteClicked(recipe?.id!!.toInt())
         }
+        viewModel.loadRecipe(recipe.id)
+        viewModel.recipeState.observe(viewLifecycleOwner, Observer { state ->
+
+            Log.i("!!!", "State changed, isFavorite: ${state.isFavorite}")
+            with(binding) {
+                tvRecipeName.text = state.recipe?.title
+                if (state.isFavorite) {
+                    ibFavorite.setImageResource(R.drawable.ic_heart)
+                } else {
+                    ibFavorite.setImageResource(R.drawable.ic_heart_empty)
+                }
+            }
+
+
+        })
+
+
     }
 
     private fun initRecycler(recipe: Recipe) {
@@ -105,13 +107,6 @@ class RecipeFragment : Fragment() {
         })
     }
 
-    private fun saveFavorites(set: Set<String>) {
-        sharedPrefs.edit().putStringSet(KEY_FAVORITES, set).commit()
-    }
-
-    private fun getFavorites(): MutableSet<String> {
-        return HashSet(sharedPrefs.getStringSet(KEY_FAVORITES, emptySet<String>()) ?: emptySet())
-    }
 
     private fun addMaterialDivider(rv: RecyclerView) {
         rv.addItemDecoration(
@@ -130,12 +125,8 @@ class RecipeFragment : Fragment() {
         _binding = null
     }
 
-    companion object {
-        const val PREFS_NAME = "recipePrefs"
-        const val KEY_FAVORITES = "favorite_recipe_id"
-    }
 
-    // Расширение для dp
+
     private val Int.dp: Int
         get() = (this * Resources.getSystem().displayMetrics.density).toInt()
 }
