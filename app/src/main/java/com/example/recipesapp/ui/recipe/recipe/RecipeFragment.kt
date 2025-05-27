@@ -53,7 +53,7 @@ class RecipeFragment : Fragment() {
 
         if (recipe != null) {
             initUI(recipe)
-            initRecycler(recipe)
+
         } else {
             binding.tvRecipeName.text = "Рецепт не найден"
         }
@@ -62,11 +62,38 @@ class RecipeFragment : Fragment() {
 
 
     private fun initUI(recipe: Recipe) {
+
+        binding.sbRecipeSeek.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+                viewModel.onChangePortions(progress)
+                binding.tvPortionsCount.text = progress.toString()
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar) {}
+        })
+
         binding.ibFavorite.setOnClickListener {
             viewModel.onFavoriteClicked(recipe?.id!!.toInt())
         }
         viewModel.loadRecipe(recipe.id)
         viewModel.recipeState.observe(viewLifecycleOwner, Observer { state ->
+            // я подозреваю что создавать каждый раз адаптеры внутри обсервера нехорошо, каждый раз при изменении стейта тратим кучу ресурсов чтобы заново создать и настроить адаптеры.
+            val ingredientsAdapter = IngredientsAdapter(state.recipe?.ingredients ?: emptyList())
+
+            binding.rvIngredients.apply {
+                adapter = ingredientsAdapter
+                addMaterialDivider(this)
+            }
+
+            val methodAdapter = MethodAdapter(state.recipe?.method ?: emptyList())
+
+            with(binding.rvMethod) {
+                adapter = methodAdapter
+                addMaterialDivider(this)
+            }
+
+            ingredientsAdapter.updateIngredients(state.portionsCount)
 
             Log.i("!!!", "State changed, isFavorite: ${state.isFavorite}")
             with(binding) {
@@ -84,30 +111,6 @@ class RecipeFragment : Fragment() {
 
 
     }
-
-    private fun initRecycler(recipe: Recipe) {
-        val ingredientsAdapter = IngredientsAdapter(recipe.ingredients)
-        binding.rvIngredients.apply {
-            adapter = ingredientsAdapter
-            addMaterialDivider(this)
-        }
-
-        with(binding.rvMethod) {
-            adapter = MethodAdapter(recipe.method)
-            addMaterialDivider(this)
-        }
-
-        binding.sbRecipeSeek.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-                ingredientsAdapter.updateIngredients(progress)
-                binding.tvPortionsCount.text = progress.toString()
-            }
-
-            override fun onStartTrackingTouch(seekBar: SeekBar) {}
-            override fun onStopTrackingTouch(seekBar: SeekBar) {}
-        })
-    }
-
 
     private fun addMaterialDivider(rv: RecyclerView) {
         rv.addItemDecoration(
