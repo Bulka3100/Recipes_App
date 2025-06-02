@@ -11,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
+import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -62,36 +63,35 @@ class RecipeFragment : Fragment() {
 
 
     private fun initUI(recipe: Recipe) {
-
-        binding.sbRecipeSeek.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-                viewModel.onChangePortions(progress)
-                binding.tvPortionsCount.text = progress.toString()
-            }
-
-            override fun onStartTrackingTouch(seekBar: SeekBar) {}
-            override fun onStopTrackingTouch(seekBar: SeekBar) {}
+        val methodAdapter = MethodAdapter(emptyList())
+        val ingredientsAdapter = IngredientsAdapter(emptyList())
+        with(binding.rvMethod) {
+            adapter = methodAdapter
+            addMaterialDivider(this)
+        }
+        with(binding.rvIngredients) {
+            adapter = ingredientsAdapter
+            addMaterialDivider(this)
+        }
+        binding.sbRecipeSeek.setOnSeekBarChangeListener(PortionSeekBarListener { progress ->
+            viewModel.onChangePortions(
+                progress
+            )
         })
+
 
         binding.ibFavorite.setOnClickListener {
             viewModel.onFavoriteClicked(recipe?.id!!.toInt())
         }
         viewModel.loadRecipe(recipe.id)
         viewModel.recipeState.observe(viewLifecycleOwner, Observer { state ->
-            // я подозреваю что создавать каждый раз адаптеры внутри обсервера нехорошо, каждый раз при изменении стейта тратим кучу ресурсов чтобы заново создать и настроить адаптеры.
-            val ingredientsAdapter = IngredientsAdapter(state.recipe?.ingredients ?: emptyList())
+            IngredientsAdapter(state.recipe?.ingredients ?: emptyList())
 
-            binding.rvIngredients.apply {
-                adapter = ingredientsAdapter
-                addMaterialDivider(this)
-            }
 
-            val methodAdapter = MethodAdapter(state.recipe?.method ?: emptyList())
 
-            with(binding.rvMethod) {
-                adapter = methodAdapter
-                addMaterialDivider(this)
-            }
+            MethodAdapter(state.recipe?.method ?: emptyList())
+
+
 
             ingredientsAdapter.updateIngredients(state.portionsCount)
 
@@ -122,6 +122,21 @@ class RecipeFragment : Fragment() {
                 dividerInsetEnd = 12.dp
             }
         )
+    }
+
+    class PortionSeekBarListener(val onChangeIngredients: (Int) -> Unit) : OnSeekBarChangeListener {
+        override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+            onChangeIngredients(progress)
+        }
+
+        override fun onStartTrackingTouch(p0: SeekBar?) {
+
+        }
+
+        override fun onStopTrackingTouch(p0: SeekBar?) {
+
+        }
+
     }
 
     override fun onDestroyView() {

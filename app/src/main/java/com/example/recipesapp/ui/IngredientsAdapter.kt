@@ -8,7 +8,7 @@ import com.example.recipesapp.databinding.ItemIngredientsBinding
 import java.math.BigDecimal
 import java.math.RoundingMode
 
-class IngredientsAdapter(private val dataSet: List<Ingredient>) :
+class IngredientsAdapter(var dataSet: List<Ingredient>) :
     RecyclerView.Adapter<IngredientsAdapter.ViewHolder>() {
 
     fun updateIngredients(progress: Int) {
