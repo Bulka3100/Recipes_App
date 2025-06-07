@@ -83,13 +83,10 @@ class RecipeFragment : Fragment() {
         binding.ibFavorite.setOnClickListener {
             viewModel.onFavoriteClicked(recipe?.id!!.toInt())
         }
-        viewModel.loadRecipe(recipe.id)
+
         viewModel.recipeState.observe(viewLifecycleOwner, Observer { state ->
-            IngredientsAdapter(state.recipe?.ingredients ?: emptyList())
-
-
-
-            MethodAdapter(state.recipe?.method ?: emptyList())
+            ingredientsAdapter.dataSet = state.recipe?.ingredients ?: emptyList()
+            methodAdapter.dataSet = state.recipe?.method ?: emptyList()
 
 
 
@@ -108,6 +105,7 @@ class RecipeFragment : Fragment() {
 
 
         })
+        viewModel.loadRecipe(recipe.id)
 
 
     }
