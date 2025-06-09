@@ -8,19 +8,25 @@ import com.example.recipesapp.databinding.ItemIngredientsBinding
 import java.math.BigDecimal
 import java.math.RoundingMode
 
-class IngredientsAdapter(private val dataSet: List<Ingredient>) :
+class IngredientsAdapter(dataSet: List<Ingredient>) :
     RecyclerView.Adapter<IngredientsAdapter.ViewHolder>() {
+    var dataSet: List<Ingredient> = dataSet
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
 
     fun updateIngredients(progress: Int) {
         quantity = progress
         notifyDataSetChanged()
     }
+
     var quantity: Int = 1
 
     class ViewHolder(val binding: ItemIngredientsBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(ingredient: Ingredient, quantity: Int) {
             ingredientTextView.text = ingredient.description
-         // вроде такая запись адекватно выглядит. Подойдет такой вариант?
+            // вроде такая запись адекватно выглядит. Подойдет такой вариант?
             val amount = ingredient.quantity.toBigDecimalOrNull() ?: BigDecimal.ZERO
 
             val totalQuantity = amount * BigDecimal(quantity)

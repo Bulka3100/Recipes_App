@@ -62,7 +62,6 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     fun onChangePortions(progress: Int) {
-        //когда копируем состояние лучше же это делать из внешшней переменной?
         _recipeState.value = recipeState.value?.copy(portionsCount = progress)
     }
 

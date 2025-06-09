@@ -5,8 +5,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.recipesapp.databinding.ItemMethodBinding
 
-class MethodAdapter(private val dataSet: List<String>) :
+class MethodAdapter(dataSet: List<String>) :
     RecyclerView.Adapter<MethodAdapter.ViewHolder>() {
+    var dataSet: List<String> = dataSet
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
 
     class ViewHolder(val binding: ItemMethodBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -23,7 +28,7 @@ class MethodAdapter(private val dataSet: List<String>) :
         val step = dataSet[position]
         with(holder.binding) {
 
-            tvText.text = "${position + 1}."+ step
+            tvText.text = "${position + 1}." + step
         }
     }
 
