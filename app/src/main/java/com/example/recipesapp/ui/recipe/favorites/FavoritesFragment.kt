@@ -10,6 +10,8 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
+import com.example.recipesapp.KEY_FAVORITES
+import com.example.recipesapp.PREFS_NAME
 import com.example.recipesapp.R
 import com.example.recipesapp.ui.recipe.recipesList.RecipesListFragment.Companion.ARG_RECIPE
 import com.example.recipesapp.data.STUB
@@ -22,7 +24,7 @@ class FavoritesFragment : Fragment() {
     private val binding get() = _binding ?: throw IllegalStateException("пустой фрагмент")
     private val sharedPrefs by lazy {
         requireContext().getSharedPreferences(
-            RecipeFragment.PREFS_NAME,
+            PREFS_NAME,
             Context.MODE_PRIVATE
         )
     }
@@ -60,10 +62,11 @@ class FavoritesFragment : Fragment() {
     }
 
     private fun getFavorites(): MutableSet<String> {
-        val getId = sharedPrefs.getStringSet(RecipeFragment.KEY_FAVORITES, emptySet<String>())
+        val getId = sharedPrefs.getStringSet(KEY_FAVORITES, emptySet<String>())
         return HashSet(getId ?: emptySet())
     }
-// видимо потерялся в коде и забыл. Можешь объяснить зачем нам тут новая часть с bundle  как мы ее вызвали если у нас эта константа вообще в другом месте. Это новая передача? upd пока фиксил остальное вроде разобрался, но лучше еще раз проговори
+
+    // видимо потерялся в коде и забыл. Можешь объяснить зачем нам тут новая часть с bundle  как мы ее вызвали если у нас эта константа вообще в другом месте. Это новая передача? upd пока фиксил остальное вроде разобрался, но лучше еще раз проговори
     private fun openRecipeByRecipeId(recipeId: Int) {
         val recipe = STUB.getRecipeById(recipeId)
         if (recipe != null) {
