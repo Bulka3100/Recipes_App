@@ -8,6 +8,7 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
+import androidx.fragment.app.viewModels
 import com.example.recipesapp.R
 import com.example.recipesapp.data.STUB
 import com.example.recipesapp.databinding.FragmentRecipesBinding
@@ -20,6 +21,8 @@ class RecipesListFragment : Fragment() {
     private var categoryId: Int? = null
     private var categoryName: String? = null
     private var categoryImageUrl: String? = null
+    private val viewModel: RecipesListViewModel by viewModels()
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -34,10 +37,11 @@ class RecipesListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initUi()
         initRecycler()
-
+        viewModel.loadRecipes(categoryId!!)
     }
 
     private fun initUi() {
+
         arguments?.let {
             categoryId = it.getInt(CategoriesListFragment.ARG_CATEGORY_ID)
             categoryName = it.getString(CategoriesListFragment.ARG_CATEGORY_NAME)
@@ -57,9 +61,12 @@ class RecipesListFragment : Fragment() {
     }
 
     private fun initRecycler() {
-        val recipes =
-            STUB.getRecipesByCategoryId(categoryId ?: throw IllegalStateException("no id"))
-        val adapter = RecipesListAdapter(recipes)
+        val adapter: RecipesListAdapter = RecipesListAdapter(emptyList())
+        binding.rvRecipes.adapter = adapter
+
+        viewModel.recipes.observe(viewLifecycleOwner) { recipes ->
+            adapter.updateData(recipes)
+        }
 
         adapter.setOnItemClickListener(
             object : RecipesListAdapter.OnItemClickListener {
@@ -69,16 +76,11 @@ class RecipesListFragment : Fragment() {
 
             }
         )
-        binding.rvRecipes.apply {
-            this.adapter = adapter
 
-
-        }
     }
 
     private fun openRecipeByRecipeId(recipeId: Int) {
-        val recipe = STUB.getRecipeById(recipeId)
-        //можно иначе передавать в replace? не понимаю зачем::class
+        val recipe = viewModel.getRecipeById(recipeId)
         parentFragmentManager.commit {
             replace<RecipeFragment>(R.id.mainContainer, args = bundleOf(ARG_RECIPE to recipe))
             addToBackStack(null)
@@ -91,8 +93,8 @@ class RecipesListFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-//    разве это не статическая ссылка и у нас может проихойти утечка памяти? Также зачем нам вообще тут констажнта если можно просто хадать ключ строкой?  Не понимаю
-companion object{
-    const val ARG_RECIPE = "arg_recipe"
-}
+
+    companion object {
+        const val ARG_RECIPE = "arg_recipe"
+    }
 }

@@ -6,11 +6,20 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.recipesapp.model.Recipe
 import com.example.recipesapp.databinding.ItemRecipeBinding
 
-class RecipesListAdapter(private val recipes: List<Recipe>) :
+class RecipesListAdapter(private var recipes: List<Recipe>) :
     RecyclerView.Adapter<RecipesListAdapter.ViewHolder>() {
 
     interface OnItemClickListener {
         fun onItemClick(recipeId: Int)
+    }
+
+    fun upgradeData(newData: List<Recipe>) {
+        recipes = newData
+        notifyDataSetChanged()
+    }
+    fun updateData(newList: List<Recipe>) {
+        recipes = newList
+        notifyDataSetChanged()
     }
 
     private var itemClickListener: OnItemClickListener? = null

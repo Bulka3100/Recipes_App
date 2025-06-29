@@ -83,6 +83,7 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
         }
 
         saveFavorites(updatedFavorites)
+            //!!!
         recipeState.value?.copy(isFavorite = recipeId.toString() in getFavorites())
     }
 }

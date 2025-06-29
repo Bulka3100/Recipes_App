@@ -10,6 +10,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
+import androidx.fragment.app.viewModels
 import com.example.recipesapp.KEY_FAVORITES
 import com.example.recipesapp.PREFS_NAME
 import com.example.recipesapp.R
@@ -22,12 +23,7 @@ import com.example.recipesapp.ui.recipe.recipesList.RecipesListAdapter
 class FavoritesFragment : Fragment() {
     private var _binding: FragmentFavoritesBinding? = null
     private val binding get() = _binding ?: throw IllegalStateException("пустой фрагмент")
-    private val sharedPrefs by lazy {
-        requireContext().getSharedPreferences(
-            PREFS_NAME,
-            Context.MODE_PRIVATE
-        )
-    }
+    private val viewModel: FavoritesViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,12 +41,13 @@ class FavoritesFragment : Fragment() {
 
     private fun initRecycler() {
 
-        val favorites = getFavorites()
-        val favoriteIds = favorites.mapNotNull { it.toIntOrNull() }.toSet()
-        val favoriteRecipes = STUB.getRecipesByIds(favoriteIds)
-        val adapter = RecipesListAdapter(favoriteRecipes)
-        // нормально что в этом месте в коде это ввел? Не знаю где еще. также как я понял если нет данных ресайклер убирается с видимости и проблем с расположением не будет?
-        binding.tvNoFavorites.isVisible = favorites.isEmpty()
+        val adapter = RecipesListAdapter(emptyList())
+        viewModel.uiState.observe(viewLifecycleOwner) { state ->
+            adapter.upgradeData(state.recipes)
+            binding.tvNoFavorites.isVisible = state.recipes.isEmpty()
+
+        }
+
         binding.rvFavoriteRecipes.adapter = adapter
         adapter.setOnItemClickListener(
             object : RecipesListAdapter.OnItemClickListener {
@@ -59,16 +56,12 @@ class FavoritesFragment : Fragment() {
                 }
             }
         )
+        viewModel.loadFavorites()
     }
 
-    private fun getFavorites(): MutableSet<String> {
-        val getId = sharedPrefs.getStringSet(KEY_FAVORITES, emptySet<String>())
-        return HashSet(getId ?: emptySet())
-    }
 
-    // видимо потерялся в коде и забыл. Можешь объяснить зачем нам тут новая часть с bundle  как мы ее вызвали если у нас эта константа вообще в другом месте. Это новая передача? upd пока фиксил остальное вроде разобрался, но лучше еще раз проговори
     private fun openRecipeByRecipeId(recipeId: Int) {
-        val recipe = STUB.getRecipeById(recipeId)
+        val recipe = viewModel.getRecipe(recipeId)
         if (recipe != null) {
             parentFragmentManager.commit {
                 replace<RecipeFragment>(R.id.mainContainer, args = bundleOf(ARG_RECIPE to recipe))

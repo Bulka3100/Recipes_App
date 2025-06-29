@@ -9,8 +9,13 @@ import com.example.recipesapp.model.Category
 import com.example.recipesapp.databinding.ItemCategoryBinding
 import java.io.InputStream
 
-class CategoriesListAdapter(private val dataSet: List<Category>) :
+class CategoriesListAdapter(private var dataSet: List<Category>) :
     RecyclerView.Adapter<CategoriesListAdapter.ViewHolder>() {
+
+    fun updateData(newItems: List<Category>) {
+        dataSet = newItems
+        notifyDataSetChanged()
+    }
 
     interface OnItemClickListener {
         fun onItemClick(categoryId: Int)
