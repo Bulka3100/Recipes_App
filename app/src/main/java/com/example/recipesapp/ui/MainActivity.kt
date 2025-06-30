@@ -3,6 +3,7 @@ package com.example.recipesapp.ui
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.commit
+import androidx.navigation.findNavController
 import com.example.recipesapp.R
 import com.example.recipesapp.databinding.ActivityMainBinding
 import com.example.recipesapp.ui.categories.CategoriesListFragment
@@ -21,32 +22,18 @@ class MainActivity : AppCompatActivity() {
         setContentView(view)
 
 
-
-
-        if (savedInstanceState == null) {
-            supportFragmentManager.commit {
-                setReorderingAllowed(true)
-                add(R.id.mainContainer, CategoriesListFragment())
-            }
-        }
-
         binding.btnFavorites.setOnClickListener {
+findNavController(R.id.nav_host_fragment).navigate(R.id.favoritesFragment)
 
-            supportFragmentManager.commit {
-                setReorderingAllowed(true)
-                replace(R.id.mainContainer, FavoritesFragment())
-            }
         }
 
-            binding.btnCategories.setOnClickListener {
+        binding.btnCategories.setOnClickListener {
+            findNavController(R.id.nav_host_fragment).navigate(R.id.categoriesListFragment)
 
-                supportFragmentManager.commit {
-                    setReorderingAllowed(true)
-                    replace(R.id.mainContainer, CategoriesListFragment ())
-                }
-            }
+
         }
     }
+}
 
 
 
