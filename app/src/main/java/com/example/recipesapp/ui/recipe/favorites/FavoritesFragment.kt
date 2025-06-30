@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.example.recipesapp.KEY_FAVORITES
 import com.example.recipesapp.PREFS_NAME
 import com.example.recipesapp.R
@@ -63,11 +64,8 @@ class FavoritesFragment : Fragment() {
     private fun openRecipeByRecipeId(recipeId: Int) {
         val recipe = viewModel.getRecipe(recipeId)
         if (recipe != null) {
-            parentFragmentManager.commit {
-                replace<RecipeFragment>(R.id.mainContainer, args = bundleOf(ARG_RECIPE to recipe))
-                addToBackStack(null)
-                setReorderingAllowed(true)
-            }
+            findNavController().navigate(R.id.recipeFragment, bundleOf(ARG_RECIPE to recipe))
+
         }
 
     }
