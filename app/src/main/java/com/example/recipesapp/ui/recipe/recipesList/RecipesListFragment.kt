@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.example.recipesapp.R
 import com.example.recipesapp.data.STUB
 import com.example.recipesapp.databinding.FragmentRecipesBinding
@@ -81,11 +82,7 @@ class RecipesListFragment : Fragment() {
 
     private fun openRecipeByRecipeId(recipeId: Int) {
         val recipe = viewModel.getRecipeById(recipeId)
-        parentFragmentManager.commit {
-            replace<RecipeFragment>(R.id.mainContainer, args = bundleOf(ARG_RECIPE to recipe))
-            addToBackStack(null)
-            setReorderingAllowed(true)
-        }
+        findNavController().navigate(R.id.recipeFragment, bundleOf(ARG_RECIPE to recipe))
 
     }
 
