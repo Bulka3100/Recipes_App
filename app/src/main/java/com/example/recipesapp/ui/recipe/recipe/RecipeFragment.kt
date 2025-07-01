@@ -15,6 +15,7 @@ import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.recipesapp.model.Recipe
@@ -30,6 +31,7 @@ class RecipeFragment : Fragment() {
     private val binding
         get() = _binding ?: throw IllegalStateException("Binding не инициализирован")
     private val viewModel: RecipeViewModel by viewModels()
+    private val args: RecipeFragmentArgs by navArgs()
 
 
     override fun onCreateView(
@@ -105,7 +107,8 @@ class RecipeFragment : Fragment() {
 
 
         })
-        viewModel.loadRecipe(recipe.id)
+        val recipeFromArgs = args.recipeId
+        viewModel.loadRecipe(recipeFromArgs)
 
 
     }

@@ -82,8 +82,9 @@ class RecipesListFragment : Fragment() {
 
     private fun openRecipeByRecipeId(recipeId: Int) {
         val recipe = viewModel.getRecipeById(recipeId)
-        findNavController().navigate(R.id.recipeFragment, bundleOf(ARG_RECIPE to recipe))
-
+        val action =
+            RecipesListFragmentDirections.actionRecipesListFragmentToRecipeFragment(recipeId)
+        findNavController().navigate(action)
     }
 
     override fun onDestroyView() {
