@@ -9,20 +9,39 @@
         tools:layout="@layout/fragment_recipes"
         android:id="@+id/recipesListFragment"
         android:name="com.example.recipesapp.ui.recipe.recipesList.RecipesListFragment"
-        android:label="RecipesListFragment" />
+        android:label="RecipesListFragment" >
+        <action
+            android:id="@+id/action_recipesListFragment_to_recipeFragment"
+            app:destination="@id/recipeFragment" />
+    </fragment>
     <fragment
         tools:layout="@layout/fragment_favorites"
         android:id="@+id/favoritesFragment"
         android:name="com.example.recipesapp.ui.recipe.favorites.FavoritesFragment"
-        android:label="FavoritesFragment" />
+        android:label="FavoritesFragment" >
+        <action
+            android:id="@+id/action_favoritesFragment_to_recipeFragment"
+            app:destination="@id/recipeFragment" />
+        <action
+            android:id="@+id/action_favoritesFragment_to_categoriesListFragment"
+            app:destination="@id/categoriesListFragment" />
+    </fragment>
     <fragment
         tools:layout="@layout/fragment_list_categories"
         android:id="@+id/categoriesListFragment"
         android:name="com.example.recipesapp.ui.categories.CategoriesListFragment"
-        android:label="CategoriesListFragment" />
+        android:label="CategoriesListFragment" >
+        <action
+            android:id="@+id/action_categoriesListFragment_to_recipesListFragment"
+            app:destination="@id/recipesListFragment" />
+    </fragment>
     <fragment
         tools:layout="@layout/recipe_fragment"
         android:id="@+id/recipeFragment"
         android:name="com.example.recipesapp.ui.recipe.recipe.RecipeFragment"
-        android:label="RecipeFragment" />
+        android:label="RecipeFragment" >
+        <argument
+            android:name="recipeId"
+            app:argType="integer" />
+    </fragment>
 </navigation>
