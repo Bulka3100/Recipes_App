@@ -8,10 +8,12 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.recipesapp.R
 import com.example.recipesapp.data.STUB
 import com.example.recipesapp.databinding.FragmentListCategoriesBinding
+import com.example.recipesapp.model.Category
 import com.example.recipesapp.ui.recipe.recipesList.RecipesListFragment
 
 class CategoriesListFragment : Fragment() {
@@ -55,23 +57,12 @@ class CategoriesListFragment : Fragment() {
 
     private fun openRecipesByCategoryId(categoryId: Int) {
         val category = viewModel.categoryState.value?.categoriesList?.find { it.id == categoryId }
-        val categoryName: String = category?.title ?: "Unknown"
-        val categoryImageUrl: String = category?.imageUrl ?: "Unknown"
-
-        val bundle = bundleOf(
-            ARG_CATEGORY_ID to categoryId,
-            ARG_CATEGORY_NAME to categoryName,
-            ARG_CATEGORY_IMAGE_URL to categoryImageUrl
-        )
-        val fragment = RecipesListFragment().apply {
-            arguments = bundle
-        }
-        parentFragmentManager.commit {
-            replace(R.id.mainContainer, fragment)
-            addToBackStack(null)
-            setReorderingAllowed(true)
-        }
-
+            ?: throw IllegalStateException("category not found")
+        val action =
+            CategoriesListFragmentDirections.actionCategoriesListFragmentToRecipesListFragment(
+                category
+            )
+        findNavController().navigate(action)
     }
 
     override fun onDestroyView() {
