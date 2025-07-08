@@ -10,6 +10,7 @@ import androidx.fragment.app.commit
 import androidx.fragment.app.replace
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.example.recipesapp.R
 import com.example.recipesapp.data.STUB
 import com.example.recipesapp.databinding.FragmentRecipesBinding
@@ -19,10 +20,10 @@ import com.example.recipesapp.ui.recipe.recipe.RecipeFragment
 class RecipesListFragment : Fragment() {
     private var _binding: FragmentRecipesBinding? = null
     private val binding get() = _binding ?: throw IllegalStateException("Binding must not be null")
-    private var categoryId: Int? = null
     private var categoryName: String? = null
     private var categoryImageUrl: String? = null
     private val viewModel: RecipesListViewModel by viewModels()
+    private val args: RecipesListFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,27 +39,24 @@ class RecipesListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initUi()
         initRecycler()
-        viewModel.loadRecipes(categoryId!!)
+        val categoryId = args.Category.id
+        viewModel.loadRecipes(categoryId)
     }
 
     private fun initUi() {
-
-        arguments?.let {
-            categoryId = it.getInt(CategoriesListFragment.ARG_CATEGORY_ID)
-            categoryName = it.getString(CategoriesListFragment.ARG_CATEGORY_NAME)
-            categoryImageUrl = it.getString(CategoriesListFragment.ARG_CATEGORY_IMAGE_URL)
-            binding.tvRecipeNaming.text = categoryName
-            val inputStream =
-                requireContext().assets.open(
-                    categoryImageUrl ?: throw IllegalStateException("null")
-                )
-            binding.ivRecipeCategory.setImageDrawable(
-                android.graphics.drawable.Drawable.createFromStream(
-                    inputStream,
-                    null
-                )
+        categoryImageUrl = args.Category.imageUrl
+        binding.tvRecipeNaming.text = args.Category.description
+        val inputStream =
+            requireContext().assets.open(
+                categoryImageUrl ?: throw IllegalStateException("null")
             )
-        }
+        binding.ivRecipeCategory.setImageDrawable(
+            android.graphics.drawable.Drawable.createFromStream(
+                inputStream,
+                null
+            )
+        )
+
     }
 
     private fun initRecycler() {
