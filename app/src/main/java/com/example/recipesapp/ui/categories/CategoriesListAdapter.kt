@@ -23,7 +23,6 @@ class CategoriesListAdapter(private var dataSet: List<Category>) :
 
     private var itemClickListener: OnItemClickListener? = null
 
-    //мы сами прописываем listener и внутри него реализацию функции onItemClick
     fun setOnItemClickListener(listener: OnItemClickListener) {
         itemClickListener = listener
     }
@@ -57,7 +56,6 @@ class CategoriesListAdapter(private var dataSet: List<Category>) :
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val category = dataSet[position]
-        //получается это объект категории в зависимости от текущей позиции
         holder.bind(category, holder.itemView.context)
 
         holder.binding.root.setOnClickListener {

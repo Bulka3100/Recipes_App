@@ -43,12 +43,10 @@ class RecipesListAdapter(private var recipes: List<Recipe>) :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        //разобрать
         val binding = ItemRecipeBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
 
-    //еще раз разобрать принцип
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val recipe = recipes[position]
         holder.bind(recipe)
