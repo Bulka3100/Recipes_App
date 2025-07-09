@@ -10,4 +10,3 @@ data class Recipe(
     val method: List<String>,
     val imageUrl: String,
 ): Parcelable
-// я тут имплементировал интерфейс? Все верно?

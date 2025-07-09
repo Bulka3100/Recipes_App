@@ -26,7 +26,6 @@ class IngredientsAdapter(dataSet: List<Ingredient>) :
     class ViewHolder(val binding: ItemIngredientsBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(ingredient: Ingredient, quantity: Int) {
             ingredientTextView.text = ingredient.description
-            // вроде такая запись адекватно выглядит. Подойдет такой вариант?
             val amount = ingredient.quantity.toBigDecimalOrNull() ?: BigDecimal.ZERO
 
             val totalQuantity = amount * BigDecimal(quantity)
