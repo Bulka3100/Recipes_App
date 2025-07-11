@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity() {
             Log.i("!!!", "responseCode: ${connection.responseCode}")
             Log.i("!!!", "responseMessage: ${connection.responseCode}")
             Log.i("!!!", "body: ${json}")
-            println(connection.inputStream.bufferedReader().readText())
+            println(json)
             val deserealized = Json.decodeFromString<List<Category>>(json)
 
 
