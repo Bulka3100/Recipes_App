@@ -13,6 +13,7 @@ import com.example.recipesapp.ui.recipe.favorites.FavoritesFragment
 import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import okhttp3.logging.HttpLoggingInterceptor
 import java.net.HttpURLConnection
 import java.net.URL
 import java.util.concurrent.Executors
@@ -23,6 +24,10 @@ class MainActivity : AppCompatActivity() {
     private val binding
         get() = _binding ?: throw IllegalStateException("binding must not be null")
     val threadPool = Executors.newFixedThreadPool(10)
+    val logging = HttpLoggingInterceptor().apply {
+        level = HttpLoggingInterceptor.Level.BODY
+    }
+    val client = OkHttpClient.Builder().addInterceptor(logging).build()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,49 +38,24 @@ class MainActivity : AppCompatActivity() {
         Log.i("!!!", "Метод onCreate() выполняется на потоке: ${Thread.currentThread().name}")
 
 
-        val thread = Thread {
-            val client = OkHttpClient()
+        threadPool.execute {
+
             val request =
                 Request.Builder().url("https://recipes.androidsprint.ru/api/category").build()
 
             client.newCall(request).execute().use { response ->
-                val json = response.body.toString()
+                val json = response.body?.string() ?: ""
                 val deserealized = Json.decodeFromString<List<Category>>(json)
                 Log.i("!!!", "Выполняю запрос на потоке : ${Thread.currentThread().name}")
                 Log.i("!!!", "responseCode: ${response.code}")
                 Log.i("!!!", "responseMessage: ${response.message}")
                 Log.i("!!!", "body: ${json}")
                 println(response.body)
+                loadCategories(deserealized)
 
-                threadPool.execute {
-                    val ids = deserealized.map { it.id }
-                    for (i in ids) {
-                        try {
-
-                            val request = Request.Builder()
-                                .url("https://recipes.androidsprint.ru/api/category/${i}/recipes")
-                                .build()
-                            client.newCall(request).execute().use { response ->
-                                val json = response.body.toString()
-                                println(json)
-                            }
-
-                        } catch (e: Exception) {
-                            Log.e(
-                                "!!!",
-                                "Ошибка при загрузке рецептов для категории $i: ${e.message}"
-                            )
-
-                        }
-                    }
-
-
-                }
             }
 
         }
-
-        thread.start()
 
 
 
@@ -90,6 +70,35 @@ class MainActivity : AppCompatActivity() {
 
         }
     }
+
+    fun loadCategories(categories: List<Category>) {
+        threadPool.execute {
+            val ids = categories.map { it.id }
+            for (i in ids) {
+                try {
+
+                    val request = Request.Builder()
+                        .url("https://recipes.androidsprint.ru/api/category/${i}/recipes")
+                        .build()
+                    client.newCall(request).execute().use { response ->
+                        val json = response.body.toString()
+                        println(json)
+                    }
+
+                } catch (e: Exception) {
+                    Log.e(
+                        "!!!",
+                        "Ошибка при загрузке рецептов для категории $i: ${e.message}"
+                    )
+
+                }
+            }
+
+
+        }
+
+    }
+
 }
 
 
