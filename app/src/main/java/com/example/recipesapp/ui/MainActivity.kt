@@ -81,7 +81,7 @@ class MainActivity : AppCompatActivity() {
                         .url("https://recipes.androidsprint.ru/api/category/${i}/recipes")
                         .build()
                     client.newCall(request).execute().use { response ->
-                        val json = response.body.toString()
+                        val json = response.body.string()
                         println(json)
                     }
 

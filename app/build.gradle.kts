@@ -45,9 +45,9 @@ android {
 }
 
 dependencies {
-    implementation(platform("com.squareup.okhttp3:okhttp-bom:5.0.0-alpha.11")) // BOM
-    implementation("com.squareup.okhttp3:okhttp") // Версия возьмётся из BOM
-    implementation("com.squareup.okhttp3:logging-interceptor")
+    implementation(libs.okhttp.bom) // BOM
+    implementation(libs.okhttp3.okhttp) // Версия возьмётся из BOM
+    implementation(libs.logging.interceptor)
     androidTestImplementation (libs.androidx.espresso.core.v350)
     androidTestImplementation (libs.androidx.runner)
     androidTestImplementation (libs.androidx.rules)
