@@ -45,6 +45,9 @@ android {
 }
 
 dependencies {
+    implementation(libs.okhttp.bom) // BOM
+    implementation(libs.okhttp3.okhttp) // Версия возьмётся из BOM
+    implementation(libs.logging.interceptor)
     androidTestImplementation (libs.androidx.espresso.core.v350)
     androidTestImplementation (libs.androidx.runner)
     androidTestImplementation (libs.androidx.rules)
