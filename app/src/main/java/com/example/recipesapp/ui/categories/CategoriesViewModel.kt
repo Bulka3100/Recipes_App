@@ -2,7 +2,6 @@ package com.example.recipesapp.ui.categories
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.recipesapp.data.STUB
 import com.example.recipesapp.data.repository.RecipesRepository
 import com.example.recipesapp.model.Category
 
@@ -18,9 +17,9 @@ class CategoriesViewModel : ViewModel() {
 
 
     fun loadCategories() {
-        Thread{
+        Thread {
             val safeCategory = repository.getCategories() ?: emptyList()
-            _categoryState.value = _categoryState.value?.copy(categoriesList =safeCategory)
+            _categoryState.value = _categoryState.value?.copy(categoriesList = safeCategory)
 
         }.start()
     }

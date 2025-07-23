@@ -7,7 +7,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.recipesapp.KEY_FAVORITES
 import com.example.recipesapp.PREFS_NAME
-import com.example.recipesapp.data.STUB
 import com.example.recipesapp.data.repository.RecipesRepository
 import com.example.recipesapp.model.Recipe
 
@@ -40,7 +39,5 @@ class FavoritesViewModel(application: Application) : AndroidViewModel(applicatio
         return HashSet(getId ?: emptySet())
     }
 
-    fun getRecipesById(id: Int): Recipe? {
-        return STUB.getRecipeById(id)
-    }
+
 }

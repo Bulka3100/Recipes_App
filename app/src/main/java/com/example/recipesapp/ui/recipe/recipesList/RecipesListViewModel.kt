@@ -3,7 +3,6 @@ package com.example.recipesapp.ui.recipe.recipesList
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.recipesapp.data.STUB
 import com.example.recipesapp.data.repository.RecipesRepository
 import com.example.recipesapp.model.Recipe
 
