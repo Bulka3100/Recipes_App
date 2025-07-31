@@ -16,7 +16,6 @@ import com.example.recipesapp.KEY_FAVORITES
 import com.example.recipesapp.PREFS_NAME
 import com.example.recipesapp.R
 import com.example.recipesapp.ui.recipe.recipesList.RecipesListFragment.Companion.ARG_RECIPE
-import com.example.recipesapp.data.STUB
 import com.example.recipesapp.databinding.FragmentFavoritesBinding
 import com.example.recipesapp.ui.recipe.recipe.RecipeFragment
 import com.example.recipesapp.ui.recipe.recipesList.RecipesListAdapter

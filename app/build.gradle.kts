@@ -7,6 +7,7 @@ plugins {
 }
 
 android {
+
     namespace = "com.example.recipesapp"
     compileSdk = 34
 
@@ -23,6 +24,7 @@ android {
 }
 
 dependencies {
+    implementation (libs.glide)
     implementation (libs.retrofit2.kotlinx.serialization.converter)
     implementation (libs.kotlinx.coroutines.android)
     implementation (libs.retrofit)

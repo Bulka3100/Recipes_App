@@ -18,6 +18,7 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.recipesapp.model.Recipe
 import com.example.recipesapp.R
 import com.example.recipesapp.ui.recipe.recipesList.RecipesListFragment.Companion.ARG_RECIPE
@@ -96,7 +97,12 @@ class RecipeFragment : Fragment() {
 
             Log.i("!!!", "State changed, isFavorite: ${state.isFavorite}")
             with(binding) {
-                ivRecipe.setImageDrawable(state.recipeImage)
+                //может лучше иной способ вытащить контекст?
+                Glide.with(requireContext())
+                    .load(state.recipeImageUrl)
+                    .placeholder(R.drawable.img_placeholder)
+                    .error(R.drawable.img_error)
+                    .into(ivRecipe)
                 tvRecipeName.text = state.recipe?.title
                 if (state.isFavorite) {
                     ibFavorite.setImageResource(R.drawable.ic_heart)
