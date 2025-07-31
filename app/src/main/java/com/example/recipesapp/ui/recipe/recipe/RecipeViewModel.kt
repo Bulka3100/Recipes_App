@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModel
 import com.example.recipesapp.KEY_FAVORITES
 import com.example.recipesapp.PREFS_NAME
 import com.example.recipesapp.data.STUB
+import com.example.recipesapp.data.repository.RecipesRepository
 import com.example.recipesapp.model.Recipe
 import java.io.IOException
 import java.io.InputStream
@@ -19,6 +20,7 @@ import java.io.InputStream
 class RecipeViewModel(application: Application) : AndroidViewModel(application) {
     private val _recipeState = MutableLiveData(RecipeUiState())
     val recipeState: LiveData<RecipeUiState> = _recipeState
+    private val repository = RecipesRepository()
     private val sharedPrefs by lazy {
 
         application.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
@@ -34,32 +36,34 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
 
     fun loadRecipe(recipeId: Int) {
 
-//        TODO  'load from network'
-        val recipe = STUB.getRecipeById(recipeId)
-        val drawable = if (recipe?.imageUrl != null) {
-            try {
-                val inputStream: InputStream =
-                    getApplication<Application>().assets.open(recipe.imageUrl)
-                Drawable.createFromStream(inputStream, null).also {
-                    inputStream.close()
+        Thread {
+            val safeRecipe = repository.getRecipeById(recipeId)
+            val drawable = if (safeRecipe?.imageUrl != null) {
+                try {
+                    val inputStream: InputStream =
+                        getApplication<Application>().assets.open(safeRecipe.imageUrl)
+                    Drawable.createFromStream(inputStream, null).also {
+                        inputStream.close()
+                    }
+                } catch (e: IOException) {
+                    Log.e("RecipeViewModel", "Error loading image from assets: ${e.message}")
+                    null
                 }
-            } catch (e: IOException) {
-                Log.e("RecipeViewModel", "Error loading image from assets: ${e.message}")
+            } else {
+                Log.e("RecipeViewModel", "Image path is null")
                 null
             }
-        } else {
-            Log.e("RecipeViewModel", "Image path is null")
-            null
-        }
-        val isFavorite = recipeId.toString() in getFavorites()
+            val isFavorite = recipeId.toString() in getFavorites()
 
-        _recipeState.value = recipeState.value?.copy(
-            recipe = recipe,
-            isFavorite = isFavorite,
-            recipeImage = drawable,
-        )
+            _recipeState.value = recipeState.value?.copy(
+                recipe = safeRecipe,
+                isFavorite = isFavorite,
+                recipeImage = drawable,
+            )
 
+        }.start()
     }
+
 
     fun onChangePortions(progress: Int) {
         _recipeState.value = recipeState.value?.copy(portionsCount = progress)
@@ -83,7 +87,7 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
         }
 
         saveFavorites(updatedFavorites)
-            //!!!
+        //!!!
         recipeState.value?.copy(isFavorite = recipeId.toString() in getFavorites())
     }
 }
