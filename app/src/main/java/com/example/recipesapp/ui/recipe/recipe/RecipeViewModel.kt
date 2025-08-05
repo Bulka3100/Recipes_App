@@ -40,7 +40,7 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
 
         Thread {
             val safeRecipe = repository.getRecipeById(recipeId)
-            val reсipeUrl = "${BASE_URL}images/${safeRecipe?.imageUrl ?: ""}"
+            val recipeUrl = "${BASE_URL}images/${safeRecipe?.imageUrl ?: ""}"
 
             val isFavorite = recipeId.toString() in getFavorites()
             //В прошлый раз не заметил этой ошибки, тут же должно быть postValue, верно? мы же по сути меняем state в другом потоке
@@ -48,7 +48,7 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
                 recipeState.value?.copy(
                     recipe = safeRecipe,
                     isFavorite = isFavorite,
-                    recipeImageUrl = reсipeUrl,
+                    recipeImageUrl = recipeUrl,
                 )
             )
 
