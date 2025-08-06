@@ -11,6 +11,7 @@ import androidx.fragment.app.replace
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.bumptech.glide.Glide
 import com.example.recipesapp.R
 import com.example.recipesapp.databinding.FragmentRecipesBinding
 import com.example.recipesapp.ui.categories.CategoriesListFragment
@@ -43,18 +44,16 @@ class RecipesListFragment : Fragment() {
     }
 
     private fun initUi() {
+        // вопросы
         categoryImageUrl = args.Category.imageUrl
-        binding.tvRecipeNaming.text = args.Category.description
-        val inputStream =
-            requireContext().assets.open(
-                categoryImageUrl ?: throw IllegalStateException("null")
-            )
-        binding.ivRecipeCategory.setImageDrawable(
-            android.graphics.drawable.Drawable.createFromStream(
-                inputStream,
-                null
-            )
-        )
+        val fileName = categoryImageUrl ?: return
+        val assetPath = "file:///android_asset/$fileName"
+
+        Glide.with(requireContext())
+            .load(assetPath)
+            .placeholder(R.drawable.img_placeholder)
+            .error(R.drawable.img_error)
+            .into(binding.ivRecipeCategory)
 
     }
 
