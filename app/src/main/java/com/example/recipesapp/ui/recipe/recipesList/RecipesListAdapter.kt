@@ -1,8 +1,11 @@
 package com.example.recipesapp.ui.recipe.recipesList
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.example.recipesapp.R
 import com.example.recipesapp.model.Recipe
 import com.example.recipesapp.databinding.ItemRecipeBinding
 
@@ -29,16 +32,15 @@ class RecipesListAdapter(private var recipes: List<Recipe>) :
     }
 
     class ViewHolder(val binding: ItemRecipeBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(recipe: Recipe) {
+        fun bind(recipe: Recipe,context: Context) {
             binding.tvRecipeName.text = recipe.title
 
-            val inputStream = binding.root.context.assets.open(recipe.imageUrl)
-            binding.ivRecipe.setImageDrawable(
-                android.graphics.drawable.Drawable.createFromStream(
-                    inputStream,
-                    null
-                )
-            )
+            Glide.with(context)
+                .load(recipe.imageUrl) // можно подставить и путь в assets, и URL
+                .placeholder(R.drawable.img_placeholder)
+                .error(R.drawable.img_error)
+                .into(binding.ivRecipe)
+
         }
     }
 
@@ -49,7 +51,8 @@ class RecipesListAdapter(private var recipes: List<Recipe>) :
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val recipe = recipes[position]
-        holder.bind(recipe)
+        //проверить праильность контекста
+        holder.bind(recipe,holder.itemView.context)
         holder.binding.ivRecipe.contentDescription =
             "Изображение рецепта ${holder.binding.tvRecipeName.text}"
         holder.binding.root.setOnClickListener {
