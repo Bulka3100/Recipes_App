@@ -20,10 +20,7 @@ class RecipesListAdapter(private var recipes: List<Recipe>) :
         recipes = newData
         notifyDataSetChanged()
     }
-    fun updateData(newList: List<Recipe>) {
-        recipes = newList
-        notifyDataSetChanged()
-    }
+
 
     private var itemClickListener: OnItemClickListener? = null
 

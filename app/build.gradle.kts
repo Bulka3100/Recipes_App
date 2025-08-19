@@ -8,7 +8,7 @@ plugins {
 
 android {
     // нормально ли таким образом указывать версию?
-    android {
+
         compileOptions {
             sourceCompatibility = JavaVersion.VERSION_21
             targetCompatibility = JavaVersion.VERSION_21
@@ -16,7 +16,7 @@ android {
         kotlinOptions {
             jvmTarget = "21"
         }
-    }
+    
     namespace = "com.example.recipesapp"
     compileSdk = 34
 
