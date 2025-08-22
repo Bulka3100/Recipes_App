@@ -5,6 +5,8 @@ import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.example.recipesapp.R
 import com.example.recipesapp.model.Category
 import com.example.recipesapp.databinding.ItemCategoryBinding
 import java.io.InputStream
@@ -33,18 +35,11 @@ class CategoriesListAdapter(private var dataSet: List<Category>) :
             binding.tvNameCt.text = category.title
             binding.tvDescription.text = category.description
 
-            try {
-                val imagePath = category.imageUrl
-                val inputStream: InputStream = context.assets.open(imagePath)
-                val drawable = Drawable.createFromStream(inputStream, null)
-
-                if (drawable == null) {
-                } else {
-                    binding.ivCategories.setImageDrawable(drawable)
-                }
-                inputStream.close()
-            } catch (e: Exception) {
-            }
+            Glide.with(context)
+                .load(category.imageUrl)
+                .placeholder(R.drawable.img_placeholder)
+                .error(R.drawable.img_error)
+                .into(binding.ivCategories)
         }
     }
 

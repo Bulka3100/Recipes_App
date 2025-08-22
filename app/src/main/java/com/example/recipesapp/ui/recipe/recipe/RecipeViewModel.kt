@@ -8,9 +8,10 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.recipesapp.BASE_URL
 import com.example.recipesapp.KEY_FAVORITES
 import com.example.recipesapp.PREFS_NAME
-import com.example.recipesapp.data.STUB
+import com.example.recipesapp.R
 import com.example.recipesapp.data.repository.RecipesRepository
 import com.example.recipesapp.model.Recipe
 import java.io.IOException
@@ -31,34 +32,23 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
         val isFavorite: Boolean = false,
         val recipe: Recipe? = null,
         val portionsCount: Int = 1,
-        val recipeImage: Drawable? = null
+        val recipeImageUrl: String? = null
     )
 
     fun loadRecipe(recipeId: Int) {
 
         Thread {
             val safeRecipe = repository.getRecipeById(recipeId)
-            val drawable = if (safeRecipe?.imageUrl != null) {
-                try {
-                    val inputStream: InputStream =
-                        getApplication<Application>().assets.open(safeRecipe.imageUrl)
-                    Drawable.createFromStream(inputStream, null).also {
-                        inputStream.close()
-                    }
-                } catch (e: IOException) {
-                    Log.e("RecipeViewModel", "Error loading image from assets: ${e.message}")
-                    null
-                }
-            } else {
-                Log.e("RecipeViewModel", "Image path is null")
-                null
-            }
-            val isFavorite = recipeId.toString() in getFavorites()
+            val recipeUrl = "${BASE_URL}images/${safeRecipe?.imageUrl ?: ""}"
 
-            _recipeState.value = recipeState.value?.copy(
-                recipe = safeRecipe,
-                isFavorite = isFavorite,
-                recipeImage = drawable,
+            val isFavorite = recipeId.toString() in getFavorites()
+            //В прошлый раз не заметил этой ошибки, тут же должно быть postValue, верно? мы же по сути меняем state в другом потоке
+            _recipeState.postValue(
+                recipeState.value?.copy(
+                    recipe = safeRecipe,
+                    isFavorite = isFavorite,
+                    recipeImageUrl = recipeUrl,
+                )
             )
 
         }.start()

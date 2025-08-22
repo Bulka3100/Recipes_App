@@ -7,6 +7,16 @@ plugins {
 }
 
 android {
+    // нормально ли таким образом указывать версию?
+
+        compileOptions {
+            sourceCompatibility = JavaVersion.VERSION_21
+            targetCompatibility = JavaVersion.VERSION_21
+        }
+        kotlinOptions {
+            jvmTarget = "21"
+        }
+    
     namespace = "com.example.recipesapp"
     compileSdk = 34
 
@@ -23,6 +33,7 @@ android {
 }
 
 dependencies {
+    implementation (libs.glide)
     implementation (libs.retrofit2.kotlinx.serialization.converter)
     implementation (libs.kotlinx.coroutines.android)
     implementation (libs.retrofit)
