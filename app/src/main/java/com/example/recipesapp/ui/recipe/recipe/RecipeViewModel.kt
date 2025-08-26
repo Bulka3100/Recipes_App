@@ -8,12 +8,14 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.recipesapp.BASE_URL
 import com.example.recipesapp.KEY_FAVORITES
 import com.example.recipesapp.PREFS_NAME
 import com.example.recipesapp.R
 import com.example.recipesapp.data.repository.RecipesRepository
 import com.example.recipesapp.model.Recipe
+import kotlinx.coroutines.launch
 import java.io.IOException
 import java.io.InputStream
 
@@ -37,21 +39,25 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
 
     fun loadRecipe(recipeId: Int) {
 
-        Thread {
-            val safeRecipe = repository.getRecipeById(recipeId)
+        viewModelScope.launch {
+            val result = repository.getRecipeById(recipeId)
+            val safeRecipe = when (result) {
+                is RecipesRepository.ApiResult.Success -> result.data
+                is RecipesRepository.ApiResult.Failure -> null
+            }
             val recipeUrl = "${BASE_URL}images/${safeRecipe?.imageUrl ?: ""}"
 
             val isFavorite = recipeId.toString() in getFavorites()
             //В прошлый раз не заметил этой ошибки, тут же должно быть postValue, верно? мы же по сути меняем state в другом потоке
-            _recipeState.postValue(
+            _recipeState.value =
                 recipeState.value?.copy(
                     recipe = safeRecipe,
                     isFavorite = isFavorite,
                     recipeImageUrl = recipeUrl,
                 )
-            )
 
-        }.start()
+        }
+
     }
 
 
