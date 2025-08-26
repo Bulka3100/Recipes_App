@@ -24,7 +24,13 @@ class CategoriesViewModel : ViewModel() {
             val result = repository.getCategories()
             val safeCategory = when (result) {
                 is RecipesRepository.ApiResult.Success -> result.data
-                is RecipesRepository.ApiResult.Failure -> emptyList()
+                is RecipesRepository.ApiResult.Failure -> {
+                    android.util.Log.d(
+                        "FavoritesViewModel",
+                        "Ошибка при получении категорий: ${result.exception.message}"
+                    )
+                    emptyList()
+                }
 
             }
             _categoryState.value = categoryState.value?.copy(categoriesList = safeCategory)
