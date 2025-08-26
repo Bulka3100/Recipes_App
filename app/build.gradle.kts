@@ -4,6 +4,7 @@ plugins {
     id("kotlin-parcelize")
     kotlin("plugin.serialization") version "2.0.21"
     id("androidx.navigation.safeargs.kotlin")
+    id("com.google.devtools.ksp") version "2.0.21-1.0.27"
 }
 
 android {
@@ -33,6 +34,10 @@ android {
 }
 
 dependencies {
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
+    ksp(libs.room.compiler)
+
     implementation (libs.glide)
     implementation (libs.retrofit2.kotlinx.serialization.converter)
     implementation (libs.kotlinx.coroutines.android)
