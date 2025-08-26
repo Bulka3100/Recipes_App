@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 
 class CategoriesViewModel : ViewModel() {
     private val _categoryState = MutableLiveData(CategoriesUiState())
-    val categoryState : LiveData<CategoriesUiState> = _categoryState
+    val categoryState: LiveData<CategoriesUiState> = _categoryState
     private val repository = RecipesRepository()
 
     data class CategoriesUiState(
@@ -21,7 +21,12 @@ class CategoriesViewModel : ViewModel() {
 
     fun loadCategories() {
         viewModelScope.launch {
-            val safeCategory = repository.getCategories() ?: emptyList()
+            val result = repository.getCategories()
+            val safeCategory = when (result) {
+                is RecipesRepository.ApiResult.Success -> result.data
+                is RecipesRepository.ApiResult.Failure -> emptyList()
+
+            }
             _categoryState.value = categoryState.value?.copy(categoriesList = safeCategory)
         }
     }

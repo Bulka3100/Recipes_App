@@ -40,7 +40,11 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
     fun loadRecipe(recipeId: Int) {
 
         viewModelScope.launch {
-            val safeRecipe = repository.getRecipeById(recipeId)
+            val result = repository.getRecipeById(recipeId)
+            val safeRecipe = when (result) {
+                is RecipesRepository.ApiResult.Success -> result.data
+                is RecipesRepository.ApiResult.Failure -> null
+            }
             val recipeUrl = "${BASE_URL}images/${safeRecipe?.imageUrl ?: ""}"
 
             val isFavorite = recipeId.toString() in getFavorites()

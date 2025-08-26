@@ -28,7 +28,11 @@ class FavoritesViewModel(application: Application) : AndroidViewModel(applicatio
         viewModelScope.launch {
             val favorites = getFavorites()
             val favoriteIds = favorites.mapNotNull { it.toIntOrNull() }
-            val safeFavoriteRecipes = repository.getRecipesByIds(favoriteIds) ?: emptyList()
+            val result = repository.getRecipesByIds(favoriteIds)
+            val safeFavoriteRecipes = when (result) {
+                is RecipesRepository.ApiResult.Success -> result.data
+                is RecipesRepository.ApiResult.Failure -> emptyList()
+            }
             _uiState.value = FavoritesUiState(recipes = safeFavoriteRecipes)
         }
     }

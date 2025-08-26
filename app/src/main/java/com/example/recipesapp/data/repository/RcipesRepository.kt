@@ -17,72 +17,87 @@ class RecipesRepository() {
         .build()
     val recipesApiService = retrofit.create(RecipesApiService::class.java)
 
+    sealed class ApiResult<out T> {
+        data class Success<T>(val data: T) : ApiResult<T>()
+        data class Failure(val exception: Throwable) : ApiResult<Nothing>()
+    }
 
-    suspend fun getCategories(): List<Category>? {
+    suspend fun getCategories(): ApiResult<List<Category>> {
         return withContext(Dispatchers.IO) {
-            val call = recipesApiService.getCategories()
             try {
-                val response = call.execute()
+                val response = recipesApiService.getCategories().execute()
                 if (response.isSuccessful) {
-                    response.body()
+                    response.body()?.let { ApiResult.Success(it) }
+                        ?: ApiResult.Failure(IllegalStateException("Body is null"))
                 } else {
-                    null
+                    ApiResult.Failure(Exception("Response code: ${response.code()}"))
                 }
             } catch (e: Exception) {
-                null
+                ApiResult.Failure(e)
             }
         }
     }
 
-
-    suspend fun getRecipeById(id: Int): Recipe? {
+    suspend fun getRecipeById(id: Int): ApiResult<Recipe> {
         return withContext(Dispatchers.IO) {
-            val call = recipesApiService.getRecipeById(id)
             try {
-                val response = call.execute()
+                val response = recipesApiService.getRecipeById(id).execute()
                 if (response.isSuccessful) {
-                    response.body()
+                    response.body()?.let { ApiResult.Success(it) }
+                        ?: ApiResult.Failure(IllegalStateException("Body is null"))
                 } else {
-                    null
+                    ApiResult.Failure(Exception("Response code: ${response.code()}"))
                 }
             } catch (e: Exception) {
-                null
+                ApiResult.Failure(e)
             }
         }
     }
 
-    suspend fun getRecipesByIds(ids: List<Int>): List<Recipe>? {
+    suspend fun getRecipesByIds(ids: List<Int>): ApiResult<List<Recipe>> {
         return withContext(Dispatchers.IO) {
-            val call = recipesApiService.getRecipes(ids)
             try {
-                val response = call.execute()
-                if (response.isSuccessful) response.body() else null
+                val response = recipesApiService.getRecipes(ids).execute()
+                if (response.isSuccessful) {
+                    response.body()?.let { ApiResult.Success(it) }
+                        ?: ApiResult.Failure(IllegalStateException("Body is null"))
+                } else {
+                    ApiResult.Failure(Exception("Response code: ${response.code()}"))
+                }
             } catch (e: Exception) {
-                null
+                ApiResult.Failure(e)
             }
         }
     }
 
-    suspend fun getCategoryById(id: Int): Category? {
+    suspend fun getCategoryById(id: Int): ApiResult<Category> {
         return withContext(Dispatchers.IO) {
-            val call = recipesApiService.getCategoryById(id)
             try {
-                val response = call.execute()
-                if (response.isSuccessful) response.body() else null
+                val response = recipesApiService.getCategoryById(id).execute()
+                if (response.isSuccessful) {
+                    response.body()?.let { ApiResult.Success(it) }
+                        ?: ApiResult.Failure(IllegalStateException("Body is null"))
+                } else {
+                    ApiResult.Failure(Exception("Response code: ${response.code()}"))
+                }
             } catch (e: Exception) {
-                null
+                ApiResult.Failure(e)
             }
         }
     }
 
-    suspend fun getRecipesByCategoryId(id: Int): List<Recipe>? {
+    suspend fun getRecipesByCategoryId(id: Int): ApiResult<List<Recipe>> {
         return withContext(Dispatchers.IO) {
-            val call = recipesApiService.getRecipesByCategoryId(id)
             try {
-                val response = call.execute().body()
-                response
+                val response = recipesApiService.getRecipesByCategoryId(id).execute()
+                if (response.isSuccessful) {
+                    response.body()?.let { ApiResult.Success(it) }
+                        ?: ApiResult.Failure(IllegalStateException("Body is null"))
+                } else {
+                    ApiResult.Failure(Exception("Response code: ${response.code()}"))
+                }
             } catch (e: Exception) {
-                null
+                ApiResult.Failure(e)
             }
         }
     }

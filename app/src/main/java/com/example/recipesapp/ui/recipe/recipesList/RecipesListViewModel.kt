@@ -16,7 +16,11 @@ class RecipesListViewModel : ViewModel() {
 
     fun loadRecipes(categoryId: Int) {
         viewModelScope.launch {
-            val safeRecipes = repository.getRecipesByCategoryId(categoryId) ?: emptyList()
+            val result = repository.getRecipesByCategoryId(categoryId)
+            val safeRecipes = when (result) {
+                is RecipesRepository.ApiResult.Success -> result.data
+                is RecipesRepository.ApiResult.Failure -> emptyList()
+            }
             _recipes.value = safeRecipes
         }
     }

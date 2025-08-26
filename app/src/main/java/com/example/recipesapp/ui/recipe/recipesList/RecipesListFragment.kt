@@ -62,7 +62,7 @@ class RecipesListFragment : Fragment() {
         binding.rvRecipes.adapter = adapter
 
         viewModel.recipes.observe(viewLifecycleOwner) { recipes ->
-            adapter.updateData(recipes)
+            adapter.upgradeData(recipes)
         }
 
         adapter.setOnItemClickListener(
