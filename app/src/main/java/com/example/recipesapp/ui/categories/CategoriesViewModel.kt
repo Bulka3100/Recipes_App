@@ -25,7 +25,7 @@ class CategoriesViewModel(application: Application) : AndroidViewModel(applicati
     val categoriesDao = db.categoryDao()
 
     data class CategoriesUiState(
-        // плохо ли просто поставить List<Category>? как тип и почеуму?
+        // тут необходимо mutable live data&
         val categoriesList: List<Category> = emptyList()
 
     )
@@ -33,7 +33,9 @@ class CategoriesViewModel(application: Application) : AndroidViewModel(applicati
 
     fun loadCategories() {
         viewModelScope.launch {
-            repository.getCategoriesFromCache()
+            val cache = repository.getCategoriesFromCache()
+            //просто продублировал, так и надо?
+            _categoryState.value = categoryState.value?.copy(categoriesList = cache)
             val result = repository.getCategories()
             val safeCategory = when (result) {
                 is RecipesRepository.ApiResult.Success -> result.data
