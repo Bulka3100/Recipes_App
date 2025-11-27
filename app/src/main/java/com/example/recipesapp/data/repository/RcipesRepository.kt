@@ -1,8 +1,6 @@
 package com.example.recipesapp.data.repository
 
-import android.app.Application
 import android.content.Context
-import androidx.lifecycle.LiveData
 import androidx.room.Room
 import com.example.recipesapp.BASE_URL
 import com.example.recipesapp.model.Category
@@ -27,22 +25,30 @@ class RecipesRepository(context: Context) {
     ).build()
 
     val categoriesDao = db.categoryDao()
+    val recipesDao = db.recipesDao()
 
     sealed class ApiResult<out T> {
         data class Success<T>(val data: T) : ApiResult<T>()
         data class Failure(val exception: Throwable) : ApiResult<Nothing>()
     }
-// а разве не нужно это делать в корутине?
-suspend fun getCategoriesFromCache(): List<Category> {
-    return categoriesDao.getAll()
-}
+
+    suspend fun getCategoriesFromCache(): List<Category> {
+        return categoriesDao.getAll()
+    }
+
+    suspend fun getAllRecipesFromCache(): List<Recipe> {
+        return recipesDao.getAll()
+    }
+
     suspend fun getCategories(): ApiResult<List<Category>> {
         return withContext(Dispatchers.IO) {
             try {
                 val response = recipesApiService.getCategories().execute()
                 if (response.isSuccessful) {
-                    response.body()?.let { ApiResult.Success(it) }
-                        ?: ApiResult.Failure(IllegalStateException("Body is null"))
+                    response.body()?.let { categories ->
+                        categoriesDao.insertCategory(categories)
+                        ApiResult.Success(categories)
+                    } ?: ApiResult.Failure(IllegalStateException("Body is null"))
                 } else {
                     ApiResult.Failure(Exception("Response code: ${response.code()}"))
                 }
@@ -57,8 +63,10 @@ suspend fun getCategoriesFromCache(): List<Category> {
             try {
                 val response = recipesApiService.getRecipeById(id).execute()
                 if (response.isSuccessful) {
-                    response.body()?.let { ApiResult.Success(it) }
-                        ?: ApiResult.Failure(IllegalStateException("Body is null"))
+                    response.body()?.let { recipe ->
+                        recipesDao.insertRecipes(listOf(recipe))
+                        ApiResult.Success(recipe)
+                    } ?: ApiResult.Failure(IllegalStateException("Body is null"))
                 } else {
                     ApiResult.Failure(Exception("Response code: ${response.code()}"))
                 }
@@ -73,8 +81,10 @@ suspend fun getCategoriesFromCache(): List<Category> {
             try {
                 val response = recipesApiService.getRecipes(ids).execute()
                 if (response.isSuccessful) {
-                    response.body()?.let { ApiResult.Success(it) }
-                        ?: ApiResult.Failure(IllegalStateException("Body is null"))
+                    response.body()?.let { recipes ->
+                        recipesDao.insertRecipes(recipes)
+                        ApiResult.Success(recipes)
+                    } ?: ApiResult.Failure(IllegalStateException("Body is null"))
                 } else {
                     ApiResult.Failure(Exception("Response code: ${response.code()}"))
                 }
@@ -89,8 +99,10 @@ suspend fun getCategoriesFromCache(): List<Category> {
             try {
                 val response = recipesApiService.getCategoryById(id).execute()
                 if (response.isSuccessful) {
-                    response.body()?.let { ApiResult.Success(it) }
-                        ?: ApiResult.Failure(IllegalStateException("Body is null"))
+                    response.body()?.let { category ->
+                        categoriesDao.insertCategory(listOf(category))
+                        ApiResult.Success(category)
+                    } ?: ApiResult.Failure(IllegalStateException("Body is null"))
                 } else {
                     ApiResult.Failure(Exception("Response code: ${response.code()}"))
                 }
@@ -105,8 +117,28 @@ suspend fun getCategoriesFromCache(): List<Category> {
             try {
                 val response = recipesApiService.getRecipesByCategoryId(id).execute()
                 if (response.isSuccessful) {
-                    response.body()?.let { ApiResult.Success(it) }
-                        ?: ApiResult.Failure(IllegalStateException("Body is null"))
+                    response.body()?.let { recipes ->
+                        recipesDao.insertRecipes(recipes)
+                        ApiResult.Success(recipes)
+                    } ?: ApiResult.Failure(IllegalStateException("Body is null"))
+                } else {
+                    ApiResult.Failure(Exception("Response code: ${response.code()}"))
+                }
+            } catch (e: Exception) {
+                ApiResult.Failure(e)
+            }
+        }
+    }
+
+    suspend fun getAllRecipes(): ApiResult<List<Recipe>> {
+        return withContext(Dispatchers.IO) {
+            try {
+                val response = recipesApiService.getRecipes(emptyList()).execute()
+                if (response.isSuccessful) {
+                    response.body()?.let { recipes ->
+                        recipesDao.insertRecipes(recipes)
+                        ApiResult.Success(recipes)
+                    } ?: ApiResult.Failure(IllegalStateException("Body is null"))
                 } else {
                     ApiResult.Failure(Exception("Response code: ${response.code()}"))
                 }

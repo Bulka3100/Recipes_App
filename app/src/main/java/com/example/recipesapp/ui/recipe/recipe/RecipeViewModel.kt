@@ -25,10 +25,8 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
     val recipeState: LiveData<RecipeUiState> = _recipeState
     private val repository = RecipesRepository(application)
     private val sharedPrefs by lazy {
-
         application.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
     }
-
 
     data class RecipeUiState(
         val isFavorite: Boolean = false,
@@ -38,28 +36,36 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
     )
 
     fun loadRecipe(recipeId: Int) {
-
         viewModelScope.launch {
-            val result = repository.getRecipeById(recipeId)
-            val safeRecipe = when (result) {
-                is RecipesRepository.ApiResult.Success -> result.data
-                is RecipesRepository.ApiResult.Failure -> null
-            }
-            val recipeUrl = "${BASE_URL}images/${safeRecipe?.imageUrl ?: ""}"
-
-            val isFavorite = recipeId.toString() in getFavorites()
-            //В прошлый раз не заметил этой ошибки, тут же должно быть postValue, верно? мы же по сути меняем state в другом потоке
-            _recipeState.value =
-                recipeState.value?.copy(
-                    recipe = safeRecipe,
+            val cachedRecipes = repository.getAllRecipesFromCache()
+            val cachedRecipe = cachedRecipes.find { it.id == recipeId }
+            if (cachedRecipe != null) {
+                val recipeUrl = "${BASE_URL}images/${cachedRecipe.imageUrl ?: ""}"
+                val isFavorite = recipeId.toString() in getFavorites()
+                _recipeState.value = RecipeUiState(
+                    recipe = cachedRecipe,
                     isFavorite = isFavorite,
-                    recipeImageUrl = recipeUrl,
+                    recipeImageUrl = recipeUrl
                 )
+            }
 
+            val result = repository.getRecipeById(recipeId)
+            when (result) {
+                is RecipesRepository.ApiResult.Success -> {
+                    val recipeUrl = "${BASE_URL}images/${result.data.imageUrl ?: ""}"
+                    val isFavorite = recipeId.toString() in getFavorites()
+                    _recipeState.value = RecipeUiState(
+                        recipe = result.data,
+                        isFavorite = isFavorite,
+                        recipeImageUrl = recipeUrl
+                    )
+                }
+                is RecipesRepository.ApiResult.Failure -> {
+                    Log.d("RecipeViewModel", "Ошибка при получении рецепта: ${result.exception.message}")
+                }
+            }
         }
-
     }
-
 
     fun onChangePortions(progress: Int) {
         _recipeState.value = recipeState.value?.copy(portionsCount = progress)
@@ -70,21 +76,17 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     private fun saveFavorites(set: Set<String>) {
-        sharedPrefs.edit().putStringSet(KEY_FAVORITES, set).commit()
+        sharedPrefs.edit().putStringSet(KEY_FAVORITES, set).apply()
     }
 
     fun onFavoriteClicked(recipeId: Int) {
-
         val updatedFavorites = getFavorites()
         if (updatedFavorites.contains(recipeId.toString())) {
             updatedFavorites.remove(recipeId.toString())
         } else {
-            updatedFavorites.add((recipeId.toString()))
+            updatedFavorites.add(recipeId.toString())
         }
-
         saveFavorites(updatedFavorites)
-        //!!!
-        recipeState.value?.copy(isFavorite = recipeId.toString() in getFavorites())
+        _recipeState.value = recipeState.value?.copy(isFavorite = recipeId.toString() in updatedFavorites)
     }
 }
-
