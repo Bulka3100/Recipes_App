@@ -33,9 +33,9 @@ class RecipesRepository(context: Context) {
         data class Failure(val exception: Throwable) : ApiResult<Nothing>()
     }
 // а разве не нужно это делать в корутине?
-    fun getCategoriesFromCache(): LiveData<List<Category>>{
-        return categoriesDao.getAll()
-    }
+suspend fun getCategoriesFromCache(): List<Category> {
+    return categoriesDao.getAll()
+}
     suspend fun getCategories(): ApiResult<List<Category>> {
         return withContext(Dispatchers.IO) {
             try {

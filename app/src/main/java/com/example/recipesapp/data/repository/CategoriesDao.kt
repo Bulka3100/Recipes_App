@@ -10,9 +10,9 @@ import com.example.recipesapp.model.Category
 @Dao
 interface CategoriesDao{
     @Query("SELECT * FROM category")
-    // нужно ли лайвдата
-    fun getAll(): LiveData<List<Category>>
+    suspend fun getAll() : List<Category>
+
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertCategory(categories : List<Category>)
+    suspend fun insertCategory(categories : List<Category>)
 }
