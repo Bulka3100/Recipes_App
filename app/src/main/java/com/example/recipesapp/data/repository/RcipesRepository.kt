@@ -1,8 +1,6 @@
 package com.example.recipesapp.data.repository
 
-import android.app.Application
 import android.content.Context
-import androidx.lifecycle.LiveData
 import androidx.room.Room
 import com.example.recipesapp.BASE_URL
 import com.example.recipesapp.model.Category
@@ -32,10 +30,20 @@ class RecipesRepository(context: Context) {
         data class Success<T>(val data: T) : ApiResult<T>()
         data class Failure(val exception: Throwable) : ApiResult<Nothing>()
     }
-// а разве не нужно это делать в корутине?
-suspend fun getCategoriesFromCache(): List<Category> {
-    return categoriesDao.getAll()
-}
+
+
+    suspend fun getCategoriesFromCache(): List<Category> {
+        return withContext(Dispatchers.IO) {
+            categoriesDao.getAll()
+        }
+    }
+
+    suspend fun insertCategories(categories: List<Category>) {
+        withContext(Dispatchers.IO) {
+            categoriesDao.insertCategory(categories)
+        }
+    }
+
     suspend fun getCategories(): ApiResult<List<Category>> {
         return withContext(Dispatchers.IO) {
             try {

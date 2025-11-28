@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 class FavoritesViewModel(application: Application) : AndroidViewModel(application) {
     private val _uiState = MutableLiveData(FavoritesUiState())
     val uiState = _uiState
-    val repository = RecipesRepository(application)  // ← ПЕРЕДАЙ application!
+    val repository = RecipesRepository(application)
     val sharedPrefs by lazy {
         application.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
     }
