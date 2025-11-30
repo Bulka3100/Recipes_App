@@ -17,6 +17,7 @@ class RecipesListViewModel(application: Application) : AndroidViewModel(applicat
 
     fun loadRecipes(categoryId: Int) {
         viewModelScope.launch {
+            //вот сюда можно добавить кэширование, но нет категории в сущности
             val result = repository.getRecipesByCategoryId(categoryId)
             val safeRecipes = when (result) {
                 is RecipesRepository.ApiResult.Success -> result.data

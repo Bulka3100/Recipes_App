@@ -25,7 +25,7 @@ class RecipesRepository(context: Context) {
     ).build()
 
     val categoriesDao = db.categoryDao()
-
+    val recipesDao = db.recipesDao()
     sealed class ApiResult<out T> {
         data class Success<T>(val data: T) : ApiResult<T>()
         data class Failure(val exception: Throwable) : ApiResult<Nothing>()
@@ -73,6 +73,27 @@ class RecipesRepository(context: Context) {
             } catch (e: Exception) {
                 ApiResult.Failure(e)
             }
+        }
+    }
+    suspend fun getRecipeFromCache(recipeId: Int): Recipe? {
+        return withContext(Dispatchers.IO) {
+            recipesDao.getRecipeById(recipeId)
+        }
+    }
+
+    suspend fun getRecipesFromCache(): List<Recipe> {
+        return withContext(Dispatchers.IO) {
+            recipesDao.getAllRecipes()
+        }
+    }
+    suspend fun insertRecipes(recipes: List<Recipe>) {
+        withContext(Dispatchers.IO) {
+            recipesDao.insertRecipes(recipes)
+        }
+    }
+    suspend fun getRecipesByCategoryFromCache(categoryId: Int): List<Recipe> {
+        return withContext(Dispatchers.IO) {
+            recipesDao.getRecipesByCategory(categoryId)
         }
     }
 

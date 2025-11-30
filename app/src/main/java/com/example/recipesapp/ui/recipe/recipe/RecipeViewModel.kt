@@ -38,26 +38,34 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
     )
 
     fun loadRecipe(recipeId: Int) {
-
         viewModelScope.launch {
+            val cachedRecipe = repository.getRecipeFromCache(recipeId)
+            if (cachedRecipe != null) {
+                val recipeUrl = "${BASE_URL}images/${cachedRecipe.imageUrl}"
+                val isFavorite = recipeId.toString() in getFavorites()
+                _recipeState.value =
+                    recipeState.value?.copy(
+                        recipe = cachedRecipe,
+                        isFavorite = isFavorite,
+                        recipeImageUrl = recipeUrl,
+                    )
+            }
+
             val result = repository.getRecipeById(recipeId)
             val safeRecipe = when (result) {
                 is RecipesRepository.ApiResult.Success -> result.data
                 is RecipesRepository.ApiResult.Failure -> null
             }
             val recipeUrl = "${BASE_URL}images/${safeRecipe?.imageUrl ?: ""}"
-
             val isFavorite = recipeId.toString() in getFavorites()
-            //В прошлый раз не заметил этой ошибки, тут же должно быть postValue, верно? мы же по сути меняем state в другом потоке
+
             _recipeState.value =
                 recipeState.value?.copy(
                     recipe = safeRecipe,
                     isFavorite = isFavorite,
                     recipeImageUrl = recipeUrl,
                 )
-
         }
-
     }
 
 
