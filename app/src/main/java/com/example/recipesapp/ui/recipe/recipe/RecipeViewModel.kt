@@ -23,7 +23,7 @@ import java.io.InputStream
 class RecipeViewModel(application: Application) : AndroidViewModel(application) {
     private val _recipeState = MutableLiveData(RecipeUiState())
     val recipeState: LiveData<RecipeUiState> = _recipeState
-    private val repository = RecipesRepository()
+    private val repository = RecipesRepository(application)
     private val sharedPrefs by lazy {
 
         application.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)

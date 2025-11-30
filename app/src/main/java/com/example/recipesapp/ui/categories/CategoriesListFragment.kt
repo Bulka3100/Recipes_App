@@ -4,16 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.recipesapp.R
 import com.example.recipesapp.databinding.FragmentListCategoriesBinding
-import com.example.recipesapp.model.Category
-import com.example.recipesapp.ui.recipe.recipesList.RecipesListFragment
 
 class CategoriesListFragment : Fragment() {
     private var _binding: FragmentListCategoriesBinding? = null
