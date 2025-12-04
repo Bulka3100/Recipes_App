@@ -37,7 +37,7 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
 
     fun loadRecipe(recipeId: Int) {
         viewModelScope.launch {
-            val cachedRecipe = repository.getRecipeByIdCash(recipeId)
+            val cachedRecipe = repository.getRecipeByIdFromCache(recipeId)
 
             if (cachedRecipe != null) {
                 val recipeUrl = "${BASE_URL}images/${cachedRecipe.imageUrl ?: ""}"

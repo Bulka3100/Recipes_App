@@ -94,7 +94,7 @@ class RecipesRepository(context: Context) {
         }
     }
 
-    suspend fun getRecipeByIdCash(id: Int): Recipe? {
+    suspend fun getRecipeByIdFromCache(id: Int): Recipe? {
         return withContext(Dispatchers.IO) {
             recipesDao.getRecipeById(id)
         }
@@ -130,6 +130,9 @@ class RecipesRepository(context: Context) {
                 val response = recipesApiService.getRecipesByCategoryId(id).execute()
                 if (response.isSuccessful) {
                     response.body()?.let { recipes ->
+                        val recipesWithCategory = recipes.map { recipe ->
+                            recipe.copy(categoryId = id)
+                        }
                         recipesDao.insertRecipes(recipes)
                         ApiResult.Success(recipes)
                     } ?: ApiResult.Failure(IllegalStateException("Body is null"))
