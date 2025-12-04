@@ -36,8 +36,9 @@ android {
 dependencies {
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
+    implementation(libs.firebase.crashlytics.buildtools)
     ksp(libs.room.compiler)
-
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
     implementation (libs.glide)
     implementation (libs.retrofit2.kotlinx.serialization.converter)
     implementation (libs.kotlinx.coroutines.android)

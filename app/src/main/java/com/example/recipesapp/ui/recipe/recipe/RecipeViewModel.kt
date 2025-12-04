@@ -37,8 +37,8 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
 
     fun loadRecipe(recipeId: Int) {
         viewModelScope.launch {
-            val cachedRecipes = repository.getAllRecipesFromCache()
-            val cachedRecipe = cachedRecipes.find { it.id == recipeId }
+            val cachedRecipe = repository.getRecipeByIdCash(recipeId)
+
             if (cachedRecipe != null) {
                 val recipeUrl = "${BASE_URL}images/${cachedRecipe.imageUrl ?: ""}"
                 val isFavorite = recipeId.toString() in getFavorites()

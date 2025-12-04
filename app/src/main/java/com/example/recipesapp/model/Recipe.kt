@@ -15,4 +15,6 @@ data class Recipe(
     val ingredients: List<Ingredient>,
     val method: List<String>,
     val imageUrl: String,
+    val isFavorite: Boolean,
+    val categoryId : Int // не было! Тогда как вообще можно было фильтроваться по категории кроме как в апи? Правильно решил?
 ): Parcelable

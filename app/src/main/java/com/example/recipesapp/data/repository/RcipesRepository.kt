@@ -94,6 +94,18 @@ class RecipesRepository(context: Context) {
         }
     }
 
+    suspend fun getRecipeByIdCash(id: Int): Recipe? {
+        return withContext(Dispatchers.IO) {
+            recipesDao.getRecipeById(id)
+        }
+    }
+
+    suspend fun getRecipesListCache(categoryId: Int): List<Recipe> {
+        return withContext(Dispatchers.IO) {
+            recipesDao.getRecipesByCategoryId(categoryId = categoryId)
+        }
+    }
+
     suspend fun getCategoryById(id: Int): ApiResult<Category> {
         return withContext(Dispatchers.IO) {
             try {
