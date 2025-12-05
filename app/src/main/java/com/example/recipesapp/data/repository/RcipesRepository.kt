@@ -141,6 +141,7 @@ class RecipesRepository(context: Context) {
                 }
             } catch (e: Exception) {
                 ApiResult.Failure(e)
+
             }
         }
     }
