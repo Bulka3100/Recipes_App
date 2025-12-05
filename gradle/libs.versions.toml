@@ -27,7 +27,6 @@ firebaseCrashlyticsBuildtools = "3.0.6"
 [libraries]
 # AndroidX
 
-kotlinx-serialization-json-v160 = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "jetbrainsKotlinxSerializationJson" }
 room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
@@ -39,7 +38,6 @@ androidx-constraintlayout = { group = "androidx.constraintlayout", name = "const
 androidx-activity = { group = "androidx.activity", name = "activity-ktx", version.ref = "activity" }
 glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinxCoroutinesAndroid" }
-kotlinx-serialization-json-v163 = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJsonVersion" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 
 # Navigation

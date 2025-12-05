@@ -133,7 +133,7 @@ class RecipesRepository(context: Context) {
                         val recipesWithCategory = recipes.map { recipe ->
                             recipe.copy(categoryId = id)
                         }
-                        recipesDao.insertRecipes(recipes)
+                        recipesDao.insertRecipes(recipesWithCategory)
                         ApiResult.Success(recipes)
                     } ?: ApiResult.Failure(IllegalStateException("Body is null"))
                 } else {
