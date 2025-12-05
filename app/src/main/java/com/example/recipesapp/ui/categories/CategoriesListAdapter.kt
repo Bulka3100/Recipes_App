@@ -1,15 +1,13 @@
 package com.example.recipesapp.ui.categories
 
 import android.content.Context
-import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.recipesapp.R
-import com.example.recipesapp.model.Category
 import com.example.recipesapp.databinding.ItemCategoryBinding
-import java.io.InputStream
+import com.example.recipesapp.model.Category
 
 class CategoriesListAdapter(private var dataSet: List<Category>) :
     RecyclerView.Adapter<CategoriesListAdapter.ViewHolder>() {
