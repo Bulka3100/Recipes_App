@@ -145,6 +145,11 @@ class RecipesRepository(context: Context) {
             }
         }
     }
+    suspend fun getFavoriteRecipes():List<Recipe> {
+        return withContext(Dispatchers.IO) {
+            recipesDao.getAll().filter { it.isFavorite == true}
+        }
+    }
 
     suspend fun getAllRecipes(): ApiResult<List<Recipe>> {
         return withContext(Dispatchers.IO) {
