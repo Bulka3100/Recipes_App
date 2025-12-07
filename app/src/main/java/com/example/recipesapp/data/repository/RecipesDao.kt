@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import com.example.recipesapp.model.Recipe
 
 @Dao
@@ -22,4 +23,12 @@ interface RecipesDao {
 
     @Query("SELECT * FROM recipes WHERE isFavorite = 1")
     suspend fun getFavorites(): List<Recipe>
+
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun updateRecipe(recipe: Recipe)
+
+    //второй метод написал чтобы ты оценила, какой оптимльнее. Если все норм и один лучше просто удалить, напиши, пожалуйста в следующем pr а этот прими с ним. Спасибо
+    @Query("UPDATE recipes SET isFavorite = :isFavorite WHERE id = :recipeId")
+    suspend fun updateFavoriteStatus(recipeId: Int, isFavorite: Boolean)
 }
+

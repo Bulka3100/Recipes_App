@@ -7,7 +7,6 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipesapp.BASE_URL
 import com.example.recipesapp.KEY_FAVORITES
@@ -24,9 +23,7 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
     private val _recipeState = MutableLiveData(RecipeUiState())
     val recipeState: LiveData<RecipeUiState> = _recipeState
     private val repository = RecipesRepository(application)
-    private val sharedPrefs by lazy {
-        application.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-    }
+
 
     data class RecipeUiState(
         val isFavorite: Boolean = false,
@@ -38,13 +35,11 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
     fun loadRecipe(recipeId: Int) {
         viewModelScope.launch {
             val cachedRecipe = repository.getRecipeByIdFromCache(recipeId)
-
-            if (cachedRecipe != null) {
-                val recipeUrl = "${BASE_URL}images/${cachedRecipe.imageUrl ?: ""}"
-                val isFavorite = recipeId.toString() in getFavorites()
+            cachedRecipe?.let { recipe ->
+                val recipeUrl = "${BASE_URL}images/${recipe.imageUrl ?: ""}"
                 _recipeState.value = RecipeUiState(
-                    recipe = cachedRecipe,
-                    isFavorite = isFavorite,
+                    recipe = recipe,
+                    isFavorite = recipe.isFavorite,
                     recipeImageUrl = recipeUrl
                 )
             }
@@ -53,15 +48,19 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
             when (result) {
                 is RecipesRepository.ApiResult.Success -> {
                     val recipeUrl = "${BASE_URL}images/${result.data.imageUrl ?: ""}"
-                    val isFavorite = recipeId.toString() in getFavorites()
+
                     _recipeState.value = RecipeUiState(
                         recipe = result.data,
-                        isFavorite = isFavorite,
+                        isFavorite = result.data.isFavorite,
                         recipeImageUrl = recipeUrl
                     )
                 }
+
                 is RecipesRepository.ApiResult.Failure -> {
-                    Log.d("RecipeViewModel", "Ошибка при получении рецепта: ${result.exception.message}")
+                    Log.d(
+                        "RecipeViewModel",
+                        "Ошибка при получении рецепта: ${result.exception.message}"
+                    )
                 }
             }
         }
@@ -71,22 +70,19 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
         _recipeState.value = recipeState.value?.copy(portionsCount = progress)
     }
 
-    private fun getFavorites(): MutableSet<String> {
-        return HashSet(sharedPrefs.getStringSet(KEY_FAVORITES, emptySet<String>()) ?: emptySet())
-    }
-
-    private fun saveFavorites(set: Set<String>) {
-        sharedPrefs.edit().putStringSet(KEY_FAVORITES, set).apply()
-    }
-
     fun onFavoriteClicked(recipeId: Int) {
-        val updatedFavorites = getFavorites()
-        if (updatedFavorites.contains(recipeId.toString())) {
-            updatedFavorites.remove(recipeId.toString())
-        } else {
-            updatedFavorites.add(recipeId.toString())
+        viewModelScope.launch {
+            try {
+                val currentIsFavorite = _recipeState.value?.isFavorite ?: false
+                val newStatus = !currentIsFavorite
+                repository.updateFavorite(recipeId, newStatus)
+
+                _recipeState.value = _recipeState.value?.copy(isFavorite = newStatus)
+
+            } catch (e: Exception) {
+                Log.e("RecipeViewModel", "Ошибка", e)
+            }
         }
-        saveFavorites(updatedFavorites)
-        _recipeState.value = recipeState.value?.copy(isFavorite = recipeId.toString() in updatedFavorites)
     }
+
 }

@@ -124,6 +124,14 @@ class RecipesRepository(context: Context) {
         }
     }
 
+    suspend fun updateFavorite(recipeId: Int, isFavorite: Boolean) {
+        val recipe = recipesDao.getRecipeById(recipeId)
+        recipe?.let {
+            val updatedRecipe = it.copy(isFavorite = isFavorite)
+            recipesDao.updateRecipe(updatedRecipe)
+        }
+    }
+
     suspend fun getRecipesByCategoryId(id: Int): ApiResult<List<Recipe>> {
         return withContext(Dispatchers.IO) {
             try {
@@ -145,7 +153,8 @@ class RecipesRepository(context: Context) {
             }
         }
     }
-    suspend fun getFavoriteRecipes():List<Recipe> {
+
+    suspend fun getFavoriteRecipes(): List<Recipe> {
         return withContext(Dispatchers.IO) {
             recipesDao.getFavorites()
         }
