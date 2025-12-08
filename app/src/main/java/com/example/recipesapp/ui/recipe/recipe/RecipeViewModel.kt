@@ -7,7 +7,6 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipesapp.BASE_URL
 import com.example.recipesapp.KEY_FAVORITES
@@ -24,10 +23,6 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
     private val _recipeState = MutableLiveData(RecipeUiState())
     val recipeState: LiveData<RecipeUiState> = _recipeState
     private val repository = RecipesRepository(application)
-    private val sharedPrefs by lazy {
-
-        application.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-    }
 
 
     data class RecipeUiState(
@@ -38,53 +33,56 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
     )
 
     fun loadRecipe(recipeId: Int) {
-
         viewModelScope.launch {
-            val result = repository.getRecipeById(recipeId)
-            val safeRecipe = when (result) {
-                is RecipesRepository.ApiResult.Success -> result.data
-                is RecipesRepository.ApiResult.Failure -> null
-            }
-            val recipeUrl = "${BASE_URL}images/${safeRecipe?.imageUrl ?: ""}"
-
-            val isFavorite = recipeId.toString() in getFavorites()
-            //В прошлый раз не заметил этой ошибки, тут же должно быть postValue, верно? мы же по сути меняем state в другом потоке
-            _recipeState.value =
-                recipeState.value?.copy(
-                    recipe = safeRecipe,
-                    isFavorite = isFavorite,
-                    recipeImageUrl = recipeUrl,
+            val cachedRecipe = repository.getRecipeByIdFromCache(recipeId)
+            cachedRecipe?.let { recipe ->
+                val recipeUrl = "${BASE_URL}images/${recipe.imageUrl ?: ""}"
+                _recipeState.value = RecipeUiState(
+                    recipe = recipe,
+                    isFavorite = recipe.isFavorite,
+                    recipeImageUrl = recipeUrl
                 )
+            }
 
+            val result = repository.getRecipeById(recipeId)
+            when (result) {
+                is RecipesRepository.ApiResult.Success -> {
+                    val recipeUrl = "${BASE_URL}images/${result.data.imageUrl ?: ""}"
+
+                    _recipeState.value = RecipeUiState(
+                        recipe = result.data,
+                        isFavorite = result.data.isFavorite,
+                        recipeImageUrl = recipeUrl
+                    )
+                }
+
+                is RecipesRepository.ApiResult.Failure -> {
+                    Log.d(
+                        "RecipeViewModel",
+                        "Ошибка при получении рецепта: ${result.exception.message}"
+                    )
+                }
+            }
         }
-
     }
-
 
     fun onChangePortions(progress: Int) {
         _recipeState.value = recipeState.value?.copy(portionsCount = progress)
     }
 
-    private fun getFavorites(): MutableSet<String> {
-        return HashSet(sharedPrefs.getStringSet(KEY_FAVORITES, emptySet<String>()) ?: emptySet())
-    }
-
-    private fun saveFavorites(set: Set<String>) {
-        sharedPrefs.edit().putStringSet(KEY_FAVORITES, set).commit()
-    }
-
     fun onFavoriteClicked(recipeId: Int) {
+        viewModelScope.launch {
+            try {
+                val currentIsFavorite = _recipeState.value?.isFavorite ?: false
+                val newStatus = !currentIsFavorite
+                repository.updateFavorite(recipeId, newStatus)
 
-        val updatedFavorites = getFavorites()
-        if (updatedFavorites.contains(recipeId.toString())) {
-            updatedFavorites.remove(recipeId.toString())
-        } else {
-            updatedFavorites.add((recipeId.toString()))
+                _recipeState.value = _recipeState.value?.copy(isFavorite = newStatus)
+
+            } catch (e: Exception) {
+                Log.e("RecipeViewModel", "Ошибка", e)
+            }
         }
-
-        saveFavorites(updatedFavorites)
-        //!!!
-        recipeState.value?.copy(isFavorite = recipeId.toString() in getFavorites())
     }
-}
 
+}

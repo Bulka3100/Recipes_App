@@ -1,6 +1,7 @@
 [versions]
 agp = "8.8.1" # Android Gradle Plugin (совместим с Kotlin 2.0.21)
 glide = "4.16.0"
+jetbrainsKotlinxSerializationJson = "1.6.0"
 kotlin = "2.0.21"
 coreKtx = "1.13.0"
 appcompat = "1.6.1"
@@ -21,6 +22,7 @@ junit = "4.13.2"
 androidxJunit = "1.1.5"
 espressoCore = "3.5.1"
 retrofit2KotlinxSerializationConverter = "1.0.0"
+firebaseCrashlyticsBuildtools = "3.0.6"
 
 [libraries]
 # AndroidX
@@ -36,7 +38,6 @@ androidx-constraintlayout = { group = "androidx.constraintlayout", name = "const
 androidx-activity = { group = "androidx.activity", name = "activity-ktx", version.ref = "activity" }
 glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinxCoroutinesAndroid" }
-kotlinx-serialization-json-v163 = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJsonVersion" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 
 # Navigation
@@ -56,6 +57,7 @@ junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidxJunit" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 retrofit2-kotlinx-serialization-converter = { module = "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter", version.ref = "retrofit2KotlinxSerializationConverter" }
+firebase-crashlytics-buildtools = { group = "com.google.firebase", name = "firebase-crashlytics-buildtools", version.ref = "firebaseCrashlyticsBuildtools" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
