@@ -1,36 +1,20 @@
 package com.example.recipesapp.data.repository
 
-import android.content.Context
-import androidx.room.Room
-import com.example.recipesapp.BASE_URL
 import com.example.recipesapp.model.Category
 import com.example.recipesapp.model.Recipe
-import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import kotlinx.serialization.json.Json
-import okhttp3.MediaType.Companion.toMediaType
-import retrofit2.Retrofit
 
-class RecipesRepository(context: Context) {
-    val contentType = "application/json".toMediaType()
-    val retrofit = Retrofit.Builder().baseUrl(BASE_URL)
-        .addConverterFactory(Json.asConverterFactory(contentType))
-        .build()
-    val recipesApiService = retrofit.create(RecipesApiService::class.java)
-    val db = Room.databaseBuilder(
-        context.applicationContext,
-        AppDataBase::class.java,
-        "databaseCategory"
-    ).build()
+import kotlin.coroutines.CoroutineContext
 
-    val categoriesDao = db.categoryDao()
-    val recipesDao = db.recipesDao()
+class RecipesRepository(
+    private val recipesDao: RecipesDao,
+    private val categoriesDao: CategoriesDao,
+    private val recipesApiService: RecipesApiService,
+    private val ioDispatcher: CoroutineContext
 
-    sealed class ApiResult<out T> {
-        data class Success<T>(val data: T) : ApiResult<T>()
-        data class Failure(val exception: Throwable) : ApiResult<Nothing>()
-    }
+) {
+
 
     suspend fun getCategoriesFromCache(): List<Category> {
         return categoriesDao.getAll()
@@ -158,6 +142,11 @@ class RecipesRepository(context: Context) {
         return withContext(Dispatchers.IO) {
             recipesDao.getFavorites()
         }
+    }
+
+    sealed class ApiResult<out T> {
+        data class Success<T>(val data: T) : ApiResult<T>()
+        data class Failure(val exception: Throwable) : ApiResult<Nothing>()
     }
 
     suspend fun getAllRecipes(): ApiResult<List<Recipe>> {

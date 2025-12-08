@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.recipesapp.model.Recipe
 import com.example.recipesapp.R
+import com.example.recipesapp.RecipesApplication
 import com.example.recipesapp.ui.recipe.recipesList.RecipesListFragment.Companion.ARG_RECIPE
 import com.example.recipesapp.databinding.RecipeFragmentBinding
 import com.example.recipesapp.ui.IngredientsAdapter
@@ -31,9 +32,14 @@ class RecipeFragment : Fragment() {
     private var _binding: RecipeFragmentBinding? = null
     private val binding
         get() = _binding ?: throw IllegalStateException("Binding не инициализирован")
-    private val viewModel: RecipeViewModel by viewModels()
+    private lateinit var viewModel: RecipeViewModel
     private val args: RecipeFragmentArgs by navArgs()
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val appContainer = (requireActivity().application as RecipesApplication).appContainer
+        viewModel = appContainer.recipeViewModelFactory.create()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

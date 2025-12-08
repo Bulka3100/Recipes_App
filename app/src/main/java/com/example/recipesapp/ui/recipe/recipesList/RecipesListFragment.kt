@@ -13,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.example.recipesapp.R
+import com.example.recipesapp.RecipesApplication
 import com.example.recipesapp.databinding.FragmentRecipesBinding
 import com.example.recipesapp.ui.categories.CategoriesListFragment
 import com.example.recipesapp.ui.recipe.recipe.RecipeFragment
@@ -20,10 +21,15 @@ import com.example.recipesapp.ui.recipe.recipe.RecipeFragment
 class RecipesListFragment : Fragment() {
     private var _binding: FragmentRecipesBinding? = null
     private val binding get() = _binding ?: throw IllegalStateException("Binding must not be null")
-    private var categoryName: String? = null
     private var categoryImageUrl: String? = null
-    private val viewModel: RecipesListViewModel by viewModels()
+    private lateinit var viewModel: RecipesListViewModel
     private val args: RecipesListFragmentArgs by navArgs()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val appContainer = (requireActivity().application as RecipesApplication).appContainer
+        viewModel = appContainer.recipesListViewModelFactory.create()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

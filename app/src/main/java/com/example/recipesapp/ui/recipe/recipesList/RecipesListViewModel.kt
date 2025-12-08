@@ -5,15 +5,16 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipesapp.data.repository.RecipesRepository
 import com.example.recipesapp.model.Recipe
 import kotlinx.coroutines.launch
 
-class RecipesListViewModel(application: Application) : AndroidViewModel(application) {
+class RecipesListViewModel(recipesRepository: RecipesRepository) : ViewModel() {
     private val _recipes = MutableLiveData<List<Recipe>>()
     val recipes: LiveData<List<Recipe>> = _recipes
-    private val repository = RecipesRepository(application)
+    private val repository = recipesRepository
 
     fun loadRecipes(categoryId: Int) {
         viewModelScope.launch {
@@ -24,7 +25,10 @@ class RecipesListViewModel(application: Application) : AndroidViewModel(applicat
             val freshRecipes = when (result) {
                 is RecipesRepository.ApiResult.Success -> result.data
                 is RecipesRepository.ApiResult.Failure -> {
-                    Log.d("RecipesListViewModel", "Ошибка при получении рецептов: ${result.exception.message}")
+                    Log.d(
+                        "RecipesListViewModel",
+                        "Ошибка при получении рецептов: ${result.exception.message}"
+                    )
                     cachedRecipes
                 }
             }

@@ -7,6 +7,7 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipesapp.BASE_URL
 import com.example.recipesapp.KEY_FAVORITES
@@ -19,10 +20,10 @@ import java.io.IOException
 import java.io.InputStream
 
 
-class RecipeViewModel(application: Application) : AndroidViewModel(application) {
+class RecipeViewModel(recipesRepository: RecipesRepository) : ViewModel() {
     private val _recipeState = MutableLiveData(RecipeUiState())
     val recipeState: LiveData<RecipeUiState> = _recipeState
-    private val repository = RecipesRepository(application)
+    private val repository = recipesRepository
 
 
     data class RecipeUiState(

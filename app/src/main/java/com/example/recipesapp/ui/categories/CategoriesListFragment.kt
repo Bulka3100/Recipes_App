@@ -8,12 +8,31 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.room.Room
+import com.example.recipesapp.BASE_URL
+import com.example.recipesapp.RecipesApplication
+import com.example.recipesapp.data.repository.AppDataBase
+import com.example.recipesapp.data.repository.RecipesApiService
+import com.example.recipesapp.data.repository.RecipesRepository
 import com.example.recipesapp.databinding.FragmentListCategoriesBinding
+import com.example.recipesapp.di.AppContainer
+import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
+import kotlinx.coroutines.Dispatchers
+import kotlinx.serialization.json.Json
+import okhttp3.MediaType.Companion.toMediaType
+import retrofit2.Retrofit
 
 class CategoriesListFragment : Fragment() {
     private var _binding: FragmentListCategoriesBinding? = null
     private val binding get() = _binding ?: throw IllegalStateException("Binding must not be null")
-    private val viewModel: CategoriesViewModel by viewModels()
+    private lateinit var viewModel: CategoriesViewModel
+
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val appContainer = (requireActivity().application as RecipesApplication).appContainer
+        viewModel = appContainer.categoriesListViewModelFactory.create()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
