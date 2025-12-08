@@ -24,19 +24,20 @@ class CategoriesViewModel(application: Application) : AndroidViewModel(applicati
             _categoryState.value = CategoriesUiState(categoriesList = cache)
 
             val result = repository.getCategories()
-            val safeCategory = when (result) {
-                is RecipesRepository.ApiResult.Success -> result.data
+            when (result) {
+                is RecipesRepository.ApiResult.Success -> {
+                    repository.insertCategories(result.data)
+                    _categoryState.value = CategoriesUiState(categoriesList = result.data)
+                }
+
                 is RecipesRepository.ApiResult.Failure -> {
                     android.util.Log.d(
                         "CategoriesViewModel",
                         "Ошибка при получении категорий: ${result.exception.message}"
                     )
-                    emptyList()
+
                 }
             }
-
-            repository.categoriesDao.insertCategory(safeCategory)
-            _categoryState.value = CategoriesUiState(categoriesList = safeCategory)
         }
     }
 }

@@ -3,21 +3,15 @@ package com.example.recipesapp.ui
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.commit
 import androidx.navigation.findNavController
 import com.example.recipesapp.R
 import com.example.recipesapp.databinding.ActivityMainBinding
 import com.example.recipesapp.model.Category
-import com.example.recipesapp.ui.categories.CategoriesListFragment
-import com.example.recipesapp.ui.recipe.favorites.FavoritesFragment
 import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.logging.HttpLoggingInterceptor
-import java.net.HttpURLConnection
-import java.net.URL
 import java.util.concurrent.Executors
-import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity() {
     private var _binding: ActivityMainBinding? = null
