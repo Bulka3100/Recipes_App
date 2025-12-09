@@ -20,12 +20,8 @@ class RecipesRepository(
         return categoriesDao.getAll()
     }
 
-    suspend fun getAllRecipesFromCache(): List<Recipe> {
-        return recipesDao.getAll()
-    }
-
     suspend fun getCategories(): ApiResult<List<Category>> {
-        return withContext(Dispatchers.IO) {
+        return withContext(ioDispatcher) {
             try {
                 val response = recipesApiService.getCategories().execute()
                 if (response.isSuccessful) {
@@ -43,7 +39,7 @@ class RecipesRepository(
     }
 
     suspend fun getRecipeById(id: Int): ApiResult<Recipe> {
-        return withContext(Dispatchers.IO) {
+        return withContext(ioDispatcher) {
             try {
                 val response = recipesApiService.getRecipeById(id).execute()
                 if (response.isSuccessful) {
@@ -61,7 +57,7 @@ class RecipesRepository(
     }
 
     suspend fun getRecipesByIds(ids: List<Int>): ApiResult<List<Recipe>> {
-        return withContext(Dispatchers.IO) {
+        return withContext(ioDispatcher) {
             try {
                 val response = recipesApiService.getRecipes(ids).execute()
                 if (response.isSuccessful) {
@@ -79,19 +75,19 @@ class RecipesRepository(
     }
 
     suspend fun getRecipeByIdFromCache(id: Int): Recipe? {
-        return withContext(Dispatchers.IO) {
+        return withContext(ioDispatcher) {
             recipesDao.getRecipeById(id)
         }
     }
 
     suspend fun getRecipesListCache(categoryId: Int): List<Recipe> {
-        return withContext(Dispatchers.IO) {
+        return withContext(ioDispatcher) {
             recipesDao.getRecipesByCategoryId(categoryId = categoryId)
         }
     }
 
     suspend fun getCategoryById(id: Int): ApiResult<Category> {
-        return withContext(Dispatchers.IO) {
+        return withContext(ioDispatcher) {
             try {
                 val response = recipesApiService.getCategoryById(id).execute()
                 if (response.isSuccessful) {
@@ -117,7 +113,7 @@ class RecipesRepository(
     }
 
     suspend fun getRecipesByCategoryId(id: Int): ApiResult<List<Recipe>> {
-        return withContext(Dispatchers.IO) {
+        return withContext(ioDispatcher) {
             try {
                 val response = recipesApiService.getRecipesByCategoryId(id).execute()
                 if (response.isSuccessful) {
@@ -139,7 +135,7 @@ class RecipesRepository(
     }
 
     suspend fun getFavoriteRecipes(): List<Recipe> {
-        return withContext(Dispatchers.IO) {
+        return withContext(ioDispatcher) {
             recipesDao.getFavorites()
         }
     }
@@ -150,7 +146,7 @@ class RecipesRepository(
     }
 
     suspend fun getAllRecipes(): ApiResult<List<Recipe>> {
-        return withContext(Dispatchers.IO) {
+        return withContext(ioDispatcher) {
             try {
                 val response = recipesApiService.getRecipes(emptyList()).execute()
                 if (response.isSuccessful) {

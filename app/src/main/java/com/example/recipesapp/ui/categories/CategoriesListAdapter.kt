@@ -33,8 +33,13 @@ class CategoriesListAdapter(private var dataSet: List<Category>) :
             binding.tvNameCt.text = category.title
             binding.tvDescription.text = category.description
 
+            val imageUrl = if (category.imageUrl?.startsWith("http") == true) {
+                category.imageUrl
+            } else {
+                "https://recipes.androidsprint.ru/api/images/${category.imageUrl}"
+            }
             Glide.with(context)
-                .load(category.imageUrl)
+                .load(imageUrl)
                 .placeholder(R.drawable.img_placeholder)
                 .error(R.drawable.img_error)
                 .into(binding.ivCategories)

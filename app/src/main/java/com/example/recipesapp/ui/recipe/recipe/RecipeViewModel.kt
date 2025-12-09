@@ -1,23 +1,15 @@
 package com.example.recipesapp.ui.recipe.recipe
 
-import android.app.Application
-import android.content.Context
-import android.graphics.drawable.Drawable
+
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipesapp.BASE_URL
-import com.example.recipesapp.KEY_FAVORITES
-import com.example.recipesapp.PREFS_NAME
-import com.example.recipesapp.R
 import com.example.recipesapp.data.repository.RecipesRepository
 import com.example.recipesapp.model.Recipe
 import kotlinx.coroutines.launch
-import java.io.IOException
-import java.io.InputStream
 
 
 class RecipeViewModel(recipesRepository: RecipesRepository) : ViewModel() {

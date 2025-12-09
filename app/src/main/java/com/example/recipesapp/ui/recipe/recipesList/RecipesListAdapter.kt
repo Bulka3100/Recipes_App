@@ -29,11 +29,16 @@ class RecipesListAdapter(private var recipes: List<Recipe>) :
     }
 
     class ViewHolder(val binding: ItemRecipeBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(recipe: Recipe,context: Context) {
+        fun bind(recipe: Recipe, context: Context) {
             binding.tvRecipeName.text = recipe.title
 
+            val imageUrl = if (recipe.imageUrl?.startsWith("http") == true) {
+                recipe.imageUrl
+            } else {
+                "https://recipes.androidsprint.ru/api/images/${recipe.imageUrl}"
+            }
             Glide.with(context)
-                .load(recipe.imageUrl) // можно подставить и путь в assets, и URL
+                .load(imageUrl) // можно подставить и путь в assets, и URL
                 .placeholder(R.drawable.img_placeholder)
                 .error(R.drawable.img_error)
                 .into(binding.ivRecipe)
@@ -49,7 +54,7 @@ class RecipesListAdapter(private var recipes: List<Recipe>) :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val recipe = recipes[position]
         //проверить праильность контекста
-        holder.bind(recipe,holder.itemView.context)
+        holder.bind(recipe, holder.itemView.context)
         holder.binding.ivRecipe.contentDescription =
             "Изображение рецепта ${holder.binding.tvRecipeName.text}"
         holder.binding.root.setOnClickListener {
