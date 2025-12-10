@@ -8,30 +8,26 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.recipesapp.R
-import com.example.recipesapp.RecipesApplication
 import com.example.recipesapp.databinding.RecipeFragmentBinding
 import com.example.recipesapp.ui.IngredientsAdapter
 import com.example.recipesapp.ui.MethodAdapter
 import com.google.android.material.divider.MaterialDividerItemDecoration
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class RecipeFragment : Fragment() {
     private var _binding: RecipeFragmentBinding? = null
     private val binding
         get() = _binding ?: throw IllegalStateException("Binding не инициализирован")
-    private lateinit var viewModel: RecipeViewModel
+    private val viewModel: RecipeViewModel by viewModels()
     private val args: RecipeFragmentArgs by navArgs()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val appContainer = (requireActivity().application as RecipesApplication).appContainer
-        viewModel = appContainer.recipeViewModelFactory.create()
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -56,6 +52,7 @@ class RecipeFragment : Fragment() {
     }
 
     private fun initUI() {
+        binding.sbRecipeSeek.progress = 1
         val methodAdapter = MethodAdapter(emptyList())
         val ingredientsAdapter = IngredientsAdapter(emptyList())
 
@@ -85,7 +82,7 @@ class RecipeFragment : Fragment() {
             methodAdapter.dataSet = state.recipe?.method ?: emptyList()
 
             ingredientsAdapter.updateIngredients(state.portionsCount)
-
+            binding.tvPortionsCount.text = state.portionsCount.toString()
             with(binding) {
                 val imageUrl = state.recipeImageUrl
 

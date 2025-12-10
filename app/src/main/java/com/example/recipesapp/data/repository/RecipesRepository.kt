@@ -2,19 +2,18 @@ package com.example.recipesapp.data.repository
 
 import com.example.recipesapp.model.Category
 import com.example.recipesapp.model.Recipe
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-import kotlin.coroutines.CoroutineContext
-
-class RecipesRepository(
+class RecipesRepository @Inject constructor(
     private val recipesDao: RecipesDao,
     private val categoriesDao: CategoriesDao,
     private val recipesApiService: RecipesApiService,
-    private val ioDispatcher: CoroutineContext
 
 ) {
-
+private val ioDispatcher : CoroutineDispatcher = Dispatchers.IO
 
     suspend fun getCategoriesFromCache(): List<Category> {
         return categoriesDao.getAll()
@@ -56,24 +55,6 @@ class RecipesRepository(
         }
     }
 
-    suspend fun getRecipesByIds(ids: List<Int>): ApiResult<List<Recipe>> {
-        return withContext(ioDispatcher) {
-            try {
-                val response = recipesApiService.getRecipes(ids).execute()
-                if (response.isSuccessful) {
-                    response.body()?.let { recipes ->
-                        recipesDao.insertRecipes(recipes)
-                        ApiResult.Success(recipes)
-                    } ?: ApiResult.Failure(IllegalStateException("Body is null"))
-                } else {
-                    ApiResult.Failure(Exception("Response code: ${response.code()}"))
-                }
-            } catch (e: Exception) {
-                ApiResult.Failure(e)
-            }
-        }
-    }
-
     suspend fun getRecipeByIdFromCache(id: Int): Recipe? {
         return withContext(ioDispatcher) {
             recipesDao.getRecipeById(id)
@@ -83,24 +64,6 @@ class RecipesRepository(
     suspend fun getRecipesListCache(categoryId: Int): List<Recipe> {
         return withContext(ioDispatcher) {
             recipesDao.getRecipesByCategoryId(categoryId = categoryId)
-        }
-    }
-
-    suspend fun getCategoryById(id: Int): ApiResult<Category> {
-        return withContext(ioDispatcher) {
-            try {
-                val response = recipesApiService.getCategoryById(id).execute()
-                if (response.isSuccessful) {
-                    response.body()?.let { category ->
-                        categoriesDao.insertCategory(listOf(category))
-                        ApiResult.Success(category)
-                    } ?: ApiResult.Failure(IllegalStateException("Body is null"))
-                } else {
-                    ApiResult.Failure(Exception("Response code: ${response.code()}"))
-                }
-            } catch (e: Exception) {
-                ApiResult.Failure(e)
-            }
         }
     }
 
@@ -145,21 +108,4 @@ class RecipesRepository(
         data class Failure(val exception: Throwable) : ApiResult<Nothing>()
     }
 
-    suspend fun getAllRecipes(): ApiResult<List<Recipe>> {
-        return withContext(ioDispatcher) {
-            try {
-                val response = recipesApiService.getRecipes(emptyList()).execute()
-                if (response.isSuccessful) {
-                    response.body()?.let { recipes ->
-                        recipesDao.insertRecipes(recipes)
-                        ApiResult.Success(recipes)
-                    } ?: ApiResult.Failure(IllegalStateException("Body is null"))
-                } else {
-                    ApiResult.Failure(Exception("Response code: ${response.code()}"))
-                }
-            } catch (e: Exception) {
-                ApiResult.Failure(e)
-            }
-        }
-    }
 }

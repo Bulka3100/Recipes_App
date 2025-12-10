@@ -17,19 +17,16 @@ import com.example.recipesapp.RecipesApplication
 import com.example.recipesapp.databinding.FragmentRecipesBinding
 import com.example.recipesapp.ui.categories.CategoriesListFragment
 import com.example.recipesapp.ui.recipe.recipe.RecipeFragment
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class RecipesListFragment : Fragment() {
     private var _binding: FragmentRecipesBinding? = null
     private val binding get() = _binding ?: throw IllegalStateException("Binding must not be null")
     private var categoryImageUrl: String? = null
-    private lateinit var viewModel: RecipesListViewModel
+    private val viewModel: RecipesListViewModel by viewModels()
     private val args: RecipesListFragmentArgs by navArgs()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val appContainer = (requireActivity().application as RecipesApplication).appContainer
-        viewModel = appContainer.recipesListViewModelFactory.create()
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

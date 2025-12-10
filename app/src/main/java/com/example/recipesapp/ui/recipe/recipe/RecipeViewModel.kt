@@ -9,14 +9,15 @@ import androidx.lifecycle.viewModelScope
 import com.example.recipesapp.BASE_URL
 import com.example.recipesapp.data.repository.RecipesRepository
 import com.example.recipesapp.model.Recipe
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-
-class RecipeViewModel(recipesRepository: RecipesRepository) : ViewModel() {
+@HiltViewModel
+class RecipeViewModel @Inject constructor(recipesRepository: RecipesRepository) : ViewModel() {
     private val _recipeState = MutableLiveData(RecipeUiState())
     val recipeState: LiveData<RecipeUiState> = _recipeState
     private val repository = recipesRepository
-
 
     data class RecipeUiState(
         val isFavorite: Boolean = false,

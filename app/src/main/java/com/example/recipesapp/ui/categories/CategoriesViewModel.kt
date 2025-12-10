@@ -1,16 +1,18 @@
 package com.example.recipesapp.ui.categories
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipesapp.data.repository.RecipesRepository
 import com.example.recipesapp.model.Category
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class CategoriesViewModel(private val repository: RecipesRepository) : ViewModel() {
+@HiltViewModel
+class CategoriesViewModel @Inject constructor (
+    private val repository: RecipesRepository) : ViewModel() {
     private val _categoryState = MutableLiveData(CategoriesUiState())
     val categoryState: LiveData<CategoriesUiState> = _categoryState
 
@@ -35,7 +37,6 @@ class CategoriesViewModel(private val repository: RecipesRepository) : ViewModel
                     emptyList()
                 }
             }
-
 
             _categoryState.value = CategoriesUiState(categoriesList = safeCategory)
         }
